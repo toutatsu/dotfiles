@@ -6,7 +6,7 @@ source_dir="$(dirname $(readlink -f "$0"))/"
 target_dir=$HOME/  
 
 # 対象のdotfileリスト
-dotfiles=(.bashrc .inputrc)
+dotfiles=(.zshrc .bashrc .inputrc)
 
 for dotfile in "${dotfiles[@]}"; do
 
@@ -14,7 +14,8 @@ for dotfile in "${dotfiles[@]}"; do
     source_file="$source_dir$dotfile"
     # target_dirにある対象のファイル
     target_file="$target_dir$dotfile"
-
+    
+    echo ------------------------------------------------
     echo checking dotfile : $target_file
 
     # 対象にファイルが存在している場合

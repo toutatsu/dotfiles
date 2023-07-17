@@ -6,7 +6,7 @@ source_dir="$(dirname $(readlink -f "$0"))/"
 target_dir=$HOME/  
 
 # 対象のdotfileリスト
-dotfiles=(.bashrc)
+dotfiles=(.bashrc .inputrc)
 
 for dotfile in "${dotfiles[@]}"; do
 

@@ -1,9 +1,28 @@
 #!/bin/bash
 
+# unlink option
+
+link=true
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --unlink)
+      link=false
+      shift
+      ;;
+    *)
+      echo "Usage: $0 [--unlink]"
+      exit 1
+      ;;
+  esac
+done
+
+
+
 # link.shのあるディレクトリ
 source_dir="$(dirname $(readlink -f "$0"))/"  
 # シンボリックリンクを作成するディレクトリ
-target_dir=$HOME/  
+target_dir=$HOME/
 
 # 対象のdotfileリスト
 dotfiles=(.zshrc .bashrc .inputrc)
@@ -18,24 +37,53 @@ for dotfile in "${dotfiles[@]}"; do
     echo ------------------------------------------------
     echo checking dotfile : $target_file
 
-    # 対象にファイルが存在している場合
-    if [ -e "$target_file" ] ; then
 
-        # シンボリックリンク
-        if [ -L "$target_file" ] ; then
-            echo symbolic link $target_file already exist
-            continue
+
+
+    if [ $link = 'true' ]; then
+
+        # 対象にファイルが存在している場合
+        if [ -e "$target_file" ] ; then
+
+            # シンボリックリンク
+            if [ -L "$target_file" ] ; then
+                echo symbolic link $target_file already exist
+                continue
+            fi
+
+            # 置換前のファイル
+            if [ -f "$target_file" ] ; then
+                echo move $target_file $target_file.dotfiles.old
+                mv $target_file $target_file.dotfiles.old
+            fi
         fi
 
-        # 置換前のファイル
-        if [ -f "$target_file" ] ; then
-            echo mv $target_file $target_file.dotfiles.old
-            mv $target_file $target_file.dotfiles.old
+        # link 作成
+        echo ln -s $source_file $target_file
+        ln -s $source_file $target_file 
+
+    else
+
+        # 対象にファイルが存在している場合
+        if [ -e "$target_file" ] ; then
+
+            # シンボリックリンク
+            if [ -L "$target_file" ] ; then
+                echo remove symbolic link $target_file
+                rm $target_file
+            fi
+
+            # 置換前のファイル
+            if [ -f "$target_file" ] ; then
+                echo keep $target_file
+            fi
         fi
+
+        if [ -e "$target_file.dotfiles.old" ]; then
+            echo move $target_file.dotfiles.old to $target_file
+            mv $target_file.dotfiles.old $target_file 
+        fi
+
     fi
-
-    # link 作成
-    echo ln -s $source_file $target_file
-    ln -s $source_file $target_file 
 
 done

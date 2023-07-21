@@ -45,3 +45,5 @@ $ ${fg[yellow]}"
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+# alias
+alias l="ls -BFGLOTWaelhis"

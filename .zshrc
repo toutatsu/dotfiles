@@ -24,3 +24,24 @@ my_preexec() {
 PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]
 $ ${fg[yellow]}"
 
+# vi
+set -o vi
+
+# show vi mode using zle(zsh line editor)
+function zle-line-init zle-keymap-select {
+    PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] "
+    case $KEYMAP in
+        vicmd)
+        PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
+$ ${fg[yellow]}"
+        ;;
+        main|viins)
+        PROMPT=$PROMPT"%{$fg_bold[green]%}INS%{$reset_color%}
+$ ${fg[yellow]}"
+        ;;
+    esac
+    zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+

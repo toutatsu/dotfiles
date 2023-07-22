@@ -1,12 +1,15 @@
 # autoload : load function in $FPATH
-# for more detail, refer zshbuiltins.
+# for more details, refer zshbuiltins.
+
 
 # completion
 autoload -Uz compinit && compinit
 autoload -Uz promptinit && promptinit
 
+
 # colors
 autoload -Uz colors && colors
+
 
 # hook
 autoload -Uz add-zsh-hook
@@ -24,12 +27,15 @@ my_preexec() {
 PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]
 $ ${fg[yellow]}"
 
+
 # vi
 set -o vi
 
-# show vi mode using zle(zsh line editor)
-function zle-line-init zle-keymap-select {
-    PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}$vcs_info_msg_0_${reset_color} "
+# show vi mode in prompt using zle(zsh line editor)
+function update-prompt-vi {
+
+    PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}⎇ $vcs_info_msg_0_${reset_color} "
+    
     case $KEYMAP in
         vicmd)
         PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
@@ -40,13 +46,25 @@ $ ${fg[yellow]}"
 $ ${fg[yellow]}"
         ;;
     esac
+
+    # echo ""
     zle reset-prompt
 }
+
+# called after Enter
+function zle-line-init { 
+    update-prompt-vi;
+    # echo '\n\nzle-line-init\n\n';
+}
 zle -N zle-line-init
+
+# called when vi mode is switched
+function zle-keymap-select { 
+    update-prompt-vi;
+    # echo '\n\nzle-keymap-select\n\n';
+}
 zle -N zle-keymap-select
 
-# alias
-alias l="ls -BFGLOTWaelhis"
 
 # git
 # https://git-scm.com/book/en/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Zsh
@@ -57,3 +75,7 @@ setopt prompt_subst
 # RPROMPT=\$vcs_info_msg_0_
 # PROMPT=\$vcs_info_msg_0_'%# '
 zstyle ':vcs_info:git:*' formats '%b'
+
+
+# alias
+alias l="ls -BFGOPTWaelhis"

@@ -25,7 +25,7 @@ source_dir="$(dirname $(readlink -f "$0"))/"
 target_dir=$HOME/
 
 # 対象のdotfileリスト
-dotfiles=(.zshrc .bashrc .inputrc)
+dotfiles=(.zshrc .bashrc .inputrc .tmux.conf)
 
 for dotfile in "${dotfiles[@]}"; do
 

@@ -11,6 +11,25 @@ autoload -Uz promptinit && promptinit
 autoload -Uz colors && colors
 
 
+# history-search
+# https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html#History-Control
+autoload -U history-search-end
+
+bindkey "^[[A" history-beginning-search-backward-end
+bindkey "^[[B" history-beginning-search-forward-end
+
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+setopt hist_ignore_all_dups
+setopt share_history
+
+#bindkey '^R' history-incremental-search-backward
+#bindkey '^S' history-incremental-search-forward
+#bindkey '^P' history-beginning-search-backward
+#bindkey '^N' history-beginning-search-forward
+
+
 # hook
 autoload -Uz add-zsh-hook
 add-zsh-hook preexec my_preexec

@@ -1,5 +1,5 @@
 # autoload : load function in $FPATH
-# for more details, refer zshbuiltins.
+# refer zshbuiltins for more details
 
 
 # completion

@@ -20,7 +20,7 @@ done
 
 
 # link.shのあるディレクトリ
-source_dir="$(dirname $(readlink -f "$0"))/"  
+source_dir="$(pwd)/"
 # シンボリックリンクを作成するディレクトリ
 target_dir=$HOME/
 

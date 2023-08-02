@@ -32,6 +32,7 @@ $ ${fg[yellow]}"
 set -o vi
 
 # show vi mode in prompt using zle(zsh line editor)
+# https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html
 function update-prompt-vi {
 
     PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}⎇ $vcs_info_msg_0_${reset_color} "

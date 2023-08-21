@@ -1,3 +1,5 @@
+echo "# dotfiles/.profile #"
+
 export EDITOR=vim
 
 ### ssh ###

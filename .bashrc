@@ -1,3 +1,5 @@
+echo "# dotfiles/.bashrc #"
+
 echo_color() {
   local color=$1
   shift

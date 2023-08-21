@@ -1,3 +1,4 @@
+echo "# dotfiles/.zshrc #"
 # autoload : load function in $FPATH
 # refer zshbuiltins for more details
 

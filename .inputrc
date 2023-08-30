@@ -1,4 +1,4 @@
-[[ $- == *i* ]] && echo dotfiles/.inputrc loaded || echo 'non-interactive' > /dev/null
+[[ $- == *i* ]] && echo loading dotfiles/.inputrc ... || echo 'non-interactive' > /dev/null
 
 set editing-mode vi
 

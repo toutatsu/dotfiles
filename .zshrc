@@ -1,4 +1,4 @@
-[[ $- == *i* ]] && echo dotfiles/.zshrc loaded || echo 'non-interactive' > /dev/null
+[[ $- == *i* ]] && echo loading dotfiles/.zshrc ... || echo 'non-interactive' > /dev/null
 
 # autoload : load function in $FPATH
 # refer zshbuiltins for more details

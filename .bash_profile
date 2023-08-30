@@ -1,1 +1,1 @@
-[[ $- == *i* ]] && echo dotfiles/.bash_profile loaded || echo 'non-interactive' > /dev/null
+[[ $- == *i* ]] && echo loading dotfiles/.bash_profile ... || echo 'non-interactive' > /dev/null

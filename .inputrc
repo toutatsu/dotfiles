@@ -1,3 +1,5 @@
+[[ $- == *i* ]] && echo dotfiles/.inputrc loaded || echo 'non-interactive' > /dev/null
+
 set editing-mode vi
 
 set show-mode-in-prompt on

@@ -1,4 +1,5 @@
-echo "# dotfiles/.profile #"
+[[ $- == *i* ]] && echo dotfiles/.profile loaded || echo 'non-interactive' > /dev/null
+
 
 export EDITOR=vim
 

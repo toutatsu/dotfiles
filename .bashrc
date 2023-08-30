@@ -1,4 +1,4 @@
-echo "# dotfiles/.bashrc #"
+[[ $- == *i* ]] && echo dotfiles/.bashrc loaded || echo 'non-interactive' > /dev/null
 
 echo_color() {
   local color=$1

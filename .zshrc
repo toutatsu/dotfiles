@@ -1,5 +1,21 @@
 [[ $- == *i* ]] && echo loading dotfiles/.zshrc ... || echo 'non-interactive' > /dev/null
 
+### oh-my-zsh ###
+
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
+
+ZSH_THEME="random"
+
+plugins=(
+  git
+)
+
+source $ZSH/oh-my-zsh.sh
+
+#################
+
+
 # autoload : load function in $FPATH
 # refer zshbuiltins for more details
 
@@ -45,8 +61,8 @@ my_preexec() {
 }
 
 # prompt
-PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]
-$ ${fg[yellow]}"
+# PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]
+# $ ${fg[yellow]}"
 
 
 # vi
@@ -56,16 +72,16 @@ set -o vi
 # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html
 function update-prompt-vi {
 
-    PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}⎇ $vcs_info_msg_0_${reset_color} "
+    # PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}⎇ $vcs_info_msg_0_${reset_color} "
         
     case $KEYMAP in
         vicmd)
-PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
-$ ${fg[yellow]}"
+# PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
+# $ ${fg[yellow]}"
         ;;
         main|viins)
-PROMPT=$PROMPT"%{$fg_bold[green]%}INS%{$reset_color%}
-$ ${fg[yellow]}"
+# PROMPT=$PROMPT"%{$fg_bold[green]%}INS%{$reset_color%}
+# $ ${fg[yellow]}"
         ;;
     esac
 

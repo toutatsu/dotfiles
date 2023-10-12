@@ -57,14 +57,14 @@ set -o vi
 function update-prompt-vi {
 
     PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ] ${fg[white]}${bg[cyan]}⎇ $vcs_info_msg_0_${reset_color} "
-    
+        
     case $KEYMAP in
         vicmd)
-        PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
+PROMPT=$PROMPT"%{$fg_bold[green]%}CMD%{$reset_color%}
 $ ${fg[yellow]}"
         ;;
         main|viins)
-        PROMPT=$PROMPT"%{$fg_bold[green]%}INS%{$reset_color%}
+PROMPT=$PROMPT"%{$fg_bold[green]%}INS%{$reset_color%}
 $ ${fg[yellow]}"
         ;;
     esac
@@ -101,3 +101,17 @@ zstyle ':vcs_info:git:*' formats '%b'
 
 # alias
 alias l="ls -BFGOPTWaelhis"
+
+# zstyle ':vcs_info:git+set-message:*' hooks git-is_clean git-untracked
+# # 状態がクリーンか判定
+# function +vi-git-is_clean(){
+#     if [ -z "$(git status --short 2>/dev/null)" ];then
+#         hook_com[misc]+="✔"
+#     fi
+# }
+# # unstaged, untrackedの検知
+# function +vi-git-untracked() {
+#     if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+#         hook_com[unstaged]+='%F{red}✗%f'
+#     fi
+# }

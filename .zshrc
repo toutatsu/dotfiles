@@ -1,5 +1,7 @@
 [[ $- == *i* ]] && echo loading dotfiles/.zshrc ... || echo 'non-interactive' > /dev/null
 
+source ~/.profile
+
 ### oh-my-zsh ###
 
 # Path to your oh-my-zsh installation.
@@ -9,7 +11,7 @@ ZSH_THEME="random"
 
 plugins=(
   git
-)
+  )
 
 source $ZSH/oh-my-zsh.sh
 

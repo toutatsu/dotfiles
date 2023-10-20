@@ -1,5 +1,7 @@
 [[ $- == *i* ]] && echo loading dotfiles/.bashrc ... || echo 'non-interactive' > /dev/null
 
+source ~/.profile
+
 echo_color() {
   local color=$1
   shift

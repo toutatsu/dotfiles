@@ -25,7 +25,7 @@ source_dir="$(pwd)/"
 target_dir=$HOME/
 
 # 対象のdotfileリスト
-dotfiles=(.profile .zshrc .bashrc .inputrc .tmux.conf .vimrc)
+dotfiles=(.profile .zshrc .bashrc .inputrc .tmux.conf .vimrc .gitconfig)
 
 for dotfile in "${dotfiles[@]}"; do
 

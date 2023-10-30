@@ -18,9 +18,9 @@ if ! ssh-add -l >/dev/null 2>&1; then
   ssh-add
 fi
 
-# alias for rm
-mv_to_trash(){
+
+trash(){
   mv -i $@ ~/.Trash && echo "\`$@\` is moved to ~/.Trash"
 }
 
-alias rm=mv_to_trash
+# alias rm=trash

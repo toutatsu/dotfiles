@@ -3,6 +3,11 @@
 source ~/.profile
 
 ### oh-my-zsh ###
+# https://ohmyz.sh/
+# https://github.com/ohmyzsh/ohmyzsh
+
+# install
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -18,7 +23,9 @@ ZSH_THEME="random"
 # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins-Overview
 plugins=(
   git
-  )
+  vi-mode
+  themes
+)
 
 source $ZSH/oh-my-zsh.sh
 

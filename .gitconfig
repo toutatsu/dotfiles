@@ -1,5 +1,19 @@
+[core]
+        pager = less
+        ; https://git-scm.com/docs/git-config#Documentation/git-config.txt-corequotePath
+        quotepath = false
+        editor = vim
 [user]
         name = name
         email = name@example.com
 [init]
         defaultBranch = main
+[pull]
+        ; rebase = false # merge (the default strategy)
+        ; rebase = true  # rebase
+        ff = only # fast-forward only 
+[alias]
+        loggraph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+        tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by"%C(cyan ul)%an%Creset" %x09%C(auto)%s %d'
+[ui]
+        color = true

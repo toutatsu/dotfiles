@@ -27,7 +27,22 @@ PROMPT=\
 "\
 $last_command_status
 
-║${fg[magenta]}Zsh $shell_options 👤${fg[white]}${bg[blue]}$current_username${reset_color}@${fg[cyan]}🖥 %M${reset_color}:${fg[yellow]}📁$current_directory${reset_color} [`tty`]
-║$prompt_level $ ${fg[yellow]}\
+║ %F{207}Zsh $shell_options 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num
+║ $prompt_level $ %F{046}\
 "
 RPROMPT="📅$current_date 🕐$current_time"
+
+# https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+colorlist() {
+	for color in {000..015}; do
+		print -nP "%F{$color}$color %f"
+	done
+	printf "\n"
+	for color in {016..255}; do
+		print -nP "%F{$color}$color %f"
+		if [ $(($((color-16))%6)) -eq 5 ]; then
+			printf "\n"
+		fi
+	done
+}
+

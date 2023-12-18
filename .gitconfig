@@ -4,8 +4,8 @@
         quotepath = false
         editor = vim
 [user]
-        name = name
-        email = name@example.com
+        name = toutatsu
+        email = toutatsu.00223+git@gmail.com
 [init]
         defaultBranch = main
 [pull]

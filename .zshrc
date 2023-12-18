@@ -135,7 +135,8 @@ my_preexec() {
 
 
 # alias
-alias l="ls -BFGOPTWaelhis"
+# alias l="ls -BFGOPTWaelhis"
+alias l="ls -BFGalhis"
 
 # zstyle ':vcs_info:git+set-message:*' hooks git-is_clean git-untracked
 # # 状態がクリーンか判定

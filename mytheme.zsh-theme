@@ -12,13 +12,17 @@ hostname='%m'
 current_date='%D'
 current_time='%t'
 # current_time='%*' # hh:mm:ss
-current_directory='%~'
+current_directory='%3~'
 
 last_command_status='$?'
 bg_job_number='%!' # the PID of the most recently executed background process
 prompt_level='%#' # '%' : normal user '#': super user
 shell_options='$-'
 
+history_num='%h'
+# history_num='%!'
+terminal_name='%y'
+terminal_name=`tty`
 # ___="" # >
 
 
@@ -27,7 +31,7 @@ PROMPT=\
 "\
 
 $last_command_status
-║ %F{207}Zsh $shell_options 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}
+╔ %F{207}Zsh $shell_options 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}
 ║ $prompt_level $ %F{046}\
 "
 RPROMPT="📅$current_date 🕐$current_time"

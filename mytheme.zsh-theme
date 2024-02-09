@@ -31,7 +31,7 @@ PROMPT=\
 "\
 
 $last_command_status
-╔ %F{207}Zsh $shell_options 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}
+╔ %F{207}$SHELL 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}
 ║ $prompt_level $ %F{046}\
 "
 RPROMPT="📅$current_date 🕐$current_time"

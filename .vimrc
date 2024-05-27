@@ -19,3 +19,8 @@ set laststatus=2
 
 " Escの2回押しでハイライト消去
 nnoremap <Esc><Esc> :nohlsearch<CR><ESC>
+
+" ノーマルモードに戻る
+inoremap ;f <Esc>
+vnoremap ;f <Esc>
+cnoremap ;f <C-C>

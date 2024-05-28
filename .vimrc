@@ -21,6 +21,6 @@ set laststatus=2
 nnoremap <Esc><Esc> :nohlsearch<CR><ESC>
 
 " ノーマルモードに戻る
-inoremap ;f <Esc>
-vnoremap ;f <Esc>
-cnoremap ;f <C-C>
+inoremap ;j <Esc>
+vnoremap ;j <Esc>
+cnoremap ;j <C-C>

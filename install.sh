@@ -30,6 +30,7 @@ files=(
   "config/tmux/.tmux.conf:$HOME/.tmux.conf"
   "config/vim/.vimrc:$HOME/.vimrc"
   "config/shell/zsh/mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"
+  "config/termux/termux.properties:$HOME/.termux/termux.properties"
 )
 
 # ---

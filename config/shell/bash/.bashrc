@@ -2,6 +2,10 @@
 
 source ~/.profile
 
+# History
+HISTSIZE=10000
+HISTFILESIZE=20000
+
 echo_color() {
   local color=$1
   shift

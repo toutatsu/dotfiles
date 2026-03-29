@@ -55,6 +55,9 @@ bindkey "^[[B" history-beginning-search-forward-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 
+HISTSIZE=10000
+SAVEHIST=10000
+
 setopt hist_ignore_all_dups
 setopt share_history
 

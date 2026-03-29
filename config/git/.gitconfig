@@ -12,8 +12,18 @@
 [pull]
         ; rebase = false # merge (the default strategy)
         ; rebase = true  # rebase
-        ff = only # fast-forward only 
+        ff = only # fast-forward only
+[fetch]
+        prune = true
+[push]
+        default = current
+[merge]
+        conflictstyle = diff3
 [alias]
+        co = checkout
+        br = branch
+        st = status
+        d  = diff
         loggraph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
         tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by"%C(cyan ul)%an%Creset" %x09%C(auto)%s %d'
 [ui]

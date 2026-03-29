@@ -18,20 +18,17 @@ done
 # スクリプト自身のディレクトリ（どこから実行しても正しく解決される）
 source_dir="$(cd "$(dirname "$0")" && pwd)"
 
-# $HOME へ配置する dotfiles
-dotfiles=(
-  .profile
-  .zshrc
-  .bashrc
-  .inputrc
-  .tmux.conf
-  .vimrc
-  .gitconfig
-)
-
-# 配置先が $HOME 以外のファイル（"ファイル名:配置先の絶対パス" 形式）
-special_files=(
-  "mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"
+# "リポジトリ内の相対パス:配置先の絶対パス" 形式
+files=(
+  "config/shell/.profile:$HOME/.profile"
+  "config/shell/.inputrc:$HOME/.inputrc"
+  "config/shell/bash/.bash_profile:$HOME/.bash_profile"
+  "config/shell/bash/.bashrc:$HOME/.bashrc"
+  "config/shell/zsh/.zshrc:$HOME/.zshrc"
+  "config/git/.gitconfig:$HOME/.gitconfig"
+  "config/tmux/.tmux.conf:$HOME/.tmux.conf"
+  "config/vim/.vimrc:$HOME/.vimrc"
+  "config/shell/zsh/mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"
 )
 
 # ---
@@ -39,11 +36,18 @@ special_files=(
 process_file() {
   local source_file="$1"
   local target_file="$2"
+  local target_dir
+  target_dir="$(dirname "$target_file")"
 
   echo "------------------------------------------------"
   echo "checking : $target_file"
 
   if [ "$install" = true ]; then
+
+    if [ ! -d "$target_dir" ]; then
+      echo "skip     : $target_file (directory not found: $target_dir)"
+      return
+    fi
 
     if [ -L "$target_file" ]; then
       echo "skip     : symlink already exists"
@@ -73,24 +77,10 @@ process_file() {
   fi
 }
 
-# $HOME へ配置
-for dotfile in "${dotfiles[@]}"; do
-  process_file "$source_dir/$dotfile" "$HOME/$dotfile"
-done
-
-# 特定ディレクトリへ配置
-for entry in "${special_files[@]}"; do
-  src_name="${entry%%:*}"
+for entry in "${files[@]}"; do
+  src_rel="${entry%%:*}"
   target_file="${entry##*:}"
-  target_dir="$(dirname "$target_file")"
-
-  if [ "$install" = true ] && [ ! -d "$target_dir" ]; then
-    echo "------------------------------------------------"
-    echo "skip     : $src_name (directory not found: $target_dir)"
-    continue
-  fi
-
-  process_file "$source_dir/$src_name" "$target_file"
+  process_file "$source_dir/$src_rel" "$target_file"
 done
 
 echo "------------------------------------------------"

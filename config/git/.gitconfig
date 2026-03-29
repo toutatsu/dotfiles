@@ -3,6 +3,7 @@
         ; https://git-scm.com/docs/git-config#Documentation/git-config.txt-corequotePath
         quotepath = false
         editor = vim
+        excludesfile = ~/.gitignore
 [user]
         name = toutatsu
         email = toutatsu.00223+git@gmail.com

@@ -9,7 +9,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     *)
-      echo "Usage: $0 [--uninstall]"
+      echo "使い方: $0 [--uninstall]"
       exit 1
       ;;
   esac
@@ -35,49 +35,69 @@ files=(
 
 # ---
 
+skipped=0
+linked=0
+restored=0
+
 process_file() {
   local source_file="$1"
   local target_file="$2"
   local target_dir
   target_dir="$(dirname "$target_file")"
 
-  echo "------------------------------------------------"
-  echo "checking : $target_file"
-
   if [ "$install" = true ]; then
 
     if [ ! -d "$target_dir" ]; then
-      echo "skip     : $target_file (directory not found: $target_dir)"
+      echo "  ⏭️  スキップ       $target_file"
+      echo "              ディレクトリが存在しません: $target_dir"
+      (( skipped++ )) || true
       return
     fi
 
     if [ -L "$target_file" ]; then
-      echo "skip     : symlink already exists"
+      echo "  ⏭️  スキップ       $target_file"
+      echo "              シンボリックリンクが既に存在します"
+      (( skipped++ )) || true
       return
     fi
 
     if [ -f "$target_file" ]; then
-      echo "backup   : $target_file -> $target_file.dotfiles.old"
+      echo "  📦 バックアップ   $target_file"
+      echo "              → ${target_file}.dotfiles.old"
       mv "$target_file" "$target_file.dotfiles.old"
     fi
 
-    echo "link     : $source_file -> $target_file"
     ln -s "$source_file" "$target_file"
+    echo "  🔗 リンク作成     $target_file"
+    echo "              → $source_file"
+    (( linked++ )) || true
 
   else
 
     if [ -L "$target_file" ]; then
-      echo "unlink   : $target_file"
       rm "$target_file"
+      echo "  🗑️  リンク削除     $target_file"
     fi
 
     if [ -f "$target_file.dotfiles.old" ]; then
-      echo "restore  : $target_file.dotfiles.old -> $target_file"
       mv "$target_file.dotfiles.old" "$target_file"
+      echo "  ♻️  リストア       ${target_file}.dotfiles.old"
+      echo "              → $target_file"
+      (( restored++ )) || true
     fi
 
   fi
 }
+
+# ヘッダー
+echo ""
+if [ "$install" = true ]; then
+  echo "🏠 dotfiles インストール"
+else
+  echo "🗑️  dotfiles アンインストール"
+fi
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 
 for entry in "${files[@]}"; do
   src_rel="${entry%%:*}"
@@ -85,5 +105,12 @@ for entry in "${files[@]}"; do
   process_file "$source_dir/$src_rel" "$target_file"
 done
 
-echo "------------------------------------------------"
-echo "done."
+# フッター
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ "$install" = true ]; then
+  echo "✅ 完了  リンク: ${linked}  スキップ: ${skipped}"
+else
+  echo "✅ 完了  リストア: ${restored}"
+fi
+echo ""

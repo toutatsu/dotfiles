@@ -3,6 +3,9 @@
 
 export EDITOR=vim
 
+# User-local binaries (e.g. Claude Code, pip-installed tools)
+export PATH="$HOME/.local/bin:$PATH"
+
 ### ssh ###
 
 if [ -n "$TERMUX_VERSION" ]; then

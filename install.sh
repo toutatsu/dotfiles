@@ -31,6 +31,8 @@ files=(
   "config/vim/.vimrc:$HOME/.vimrc"
   "config/shell/zsh/mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"
   "config/termux/termux.properties:$HOME/.termux/termux.properties"
+  "config/claude/settings.json:$HOME/.claude/settings.json"
+  "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
 )
 
 # ---
@@ -98,6 +100,11 @@ else
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
+
+# Claude Code が自動作成しないディレクトリを事前に作成
+if [ "$install" = true ] && [ -d "$HOME/.claude" ]; then
+  mkdir -p "$HOME/.claude/agents"
+fi
 
 for entry in "${files[@]}"; do
   src_rel="${entry%%:*}"

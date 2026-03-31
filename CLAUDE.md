@@ -28,6 +28,10 @@ All files are under `config/`. `mytheme.zsh-theme` is deployed to `~/.oh-my-zsh/
 
 ```
 config/
+  claude/
+    settings.json          → ~/.claude/settings.json
+    agents/
+      code-reviewer.md     → ~/.claude/agents/code-reviewer.md
   git/    → .gitconfig, .gitignore
   shell/  → .profile, .inputrc
     bash/ → .bash_profile, .bashrc
@@ -56,3 +60,19 @@ config/
 ## oh-my-zsh Setup
 
 oh-my-zsh is not included in this repo and must be installed separately before sourcing `.zshrc`. The `mytheme.zsh-theme` file needs to be copied/linked into `~/.oh-my-zsh/themes/`.
+
+## Claude Code Setup
+
+`settings.json` is managed here. MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
+
+To add MCP servers manually after install:
+
+```bash
+# GitHub (requires GITHUB_PERSONAL_ACCESS_TOKEN)
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+
+# その他は `claude mcp add` で随時追加
+claude mcp list   # 登録済みサーバー一覧
+```
+
+Agents in `config/claude/agents/` are symlinked to `~/.claude/agents/` and available across all projects.

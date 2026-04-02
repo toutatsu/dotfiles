@@ -13,11 +13,13 @@ source ~/.profile
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="mytheme"
+
+# ランダムテーマ選択用: ZSH_THEME="random" と組み合わせる
 # ZSH_THEME_RANDOM_CANDIDATES=(
 #   "rkj"
 #   "candy-kingdom"
 # )
-# ZSH_THEME_RANDOM_IGNORED=()
+# ZSH_THEME_RANDOM_IGNORED=()  # ランダム選択から除外するテーマ
 
 # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins
 # https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins-Overview
@@ -61,6 +63,7 @@ SAVEHIST=10000
 setopt hist_ignore_all_dups
 setopt share_history
 
+# インクリメンタル履歴検索 (^R/^S) と前後サーチ (^P/^N) の代替バインド
 #bindkey '^R' history-incremental-search-backward
 #bindkey '^S' history-incremental-search-forward
 #bindkey '^P' history-beginning-search-backward
@@ -68,27 +71,41 @@ setopt share_history
 
 
 # hook
-# autoload bbb-Uz add-zsh-hook
-add-zsh-hook preexec my_preexec
-# add-zsh-hook precmd my_precmd
+# add-zsh-hook は oh-my-zsh が autoload 済み (手動 autoload 不要)
+# add-zsh-hook preexec my_preexec  # 下枠は mytheme の PROMPT 内で描画するため不要
+add-zsh-hook precmd my_precmd  # 次プロンプト表示前に下枠を描画
 
-# my_precmd() {
-# }
-
-my_preexec() {
-    printf "${reset_color}"
-    echo -n "╚"
-    printf '═%.0s' $(seq 3 $(tput cols))
-    echo "╝"
+_first_prompt=true
+my_precmd() {
+    if [[ $_first_prompt == true ]]; then
+        _first_prompt=false  # 初回はスキップ (閉じる枠がないため)
+    else
+        printf "${reset_color}╚"
+        printf '═%.0s' $(seq 3 $COLUMNS)
+        printf "╝\n"
+    fi
 }
 
-# prompt
+# my_preexec() {
+#     printf "${reset_color}"
+#     echo -n "╚"
+#     printf '═%.0s' $(seq 3 $(tput cols))
+#     echo "╝"
+# }
+
+# Enter 時に cursor magic で描いた下枠を消去 (コマンド出力との混在を防ぐ)
+zle-line-finish() {
+    print -n $'\e[1B\r\e[2K\e[1A'
+}
+zle -N zle-line-finish
+
+# prompt (oh-my-zsh テーマ不使用時の手動定義)
 # PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]
 # $ ${fg[yellow]}"
 
 
 # vi
-# set -o vi
+# set -o vi  # readline ベースの vi モード (.inputrc で設定済みのため通常不要)
 
 # show vi mode in prompt using zle(zsh line editor)
 # https://zsh.sourceforge.io/Doc/Release/Zsh-Line-Editor.html
@@ -126,7 +143,7 @@ my_preexec() {
 # zle -N zle-keymap-select
 
 
-# git
+# git (zsh 組み込みの vcs_info でブランチ名等をプロンプトに表示する)
 # https://git-scm.com/book/en/v2/Appendix-A%3A-Git-in-Other-Environments-Git-in-Zsh
 # autoload -Uz vcs_info
 # precmd_vcs_info() { vcs_info }
@@ -138,9 +155,10 @@ my_preexec() {
 
 
 # alias
-# alias l="ls -BFGOPTWaelhis"
+# alias l="ls -BFGOPTWaelhis"  # macOS 拡張オプション付き (BSD ls 向け)
 alias l="ls -BFGalhis"
 
+# vcs_info フック: クリーン状態と未追跡ファイルをプロンプトに表示する (上の git ブロックと組み合わせる)
 # zstyle ':vcs_info:git+set-message:*' hooks git-is_clean git-untracked
 # # 状態がクリーンか判定
 # function +vi-git-is_clean(){

@@ -65,8 +65,8 @@ process_file() {
 
     if [ -f "$target_file" ]; then
       echo "  📦 バックアップ   $target_file"
-      echo "              → ${target_file}.dotfiles.old"
-      mv "$target_file" "$target_file.dotfiles.old"
+      echo "              → ${target_file}.pre-dotfiles"
+      mv "$target_file" "$target_file.pre-dotfiles"
     fi
 
     ln -s "$source_file" "$target_file"
@@ -81,9 +81,9 @@ process_file() {
       echo "  🗑️  リンク削除     $target_file"
     fi
 
-    if [ -f "$target_file.dotfiles.old" ]; then
-      mv "$target_file.dotfiles.old" "$target_file"
-      echo "  ♻️  リストア       ${target_file}.dotfiles.old"
+    if [ -f "$target_file.pre-dotfiles" ]; then
+      mv "$target_file.pre-dotfiles" "$target_file"
+      echo "  ♻️  リストア       ${target_file}.pre-dotfiles"
       echo "              → $target_file"
       (( restored++ )) || true
     fi

@@ -4,6 +4,7 @@
         quotepath = false
         editor = vim
         excludesfile = ~/.gitignore
+        attributesfile = ~/.gitattributes
 [user]
         name = toutatsu
         email = toutatsu.00223+git@gmail.com

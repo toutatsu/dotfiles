@@ -32,7 +32,7 @@ config/
     settings.json          → ~/.claude/settings.json
     agents/
       code-reviewer.md     → ~/.claude/agents/code-reviewer.md
-  git/    → .gitconfig, .gitignore
+  git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme

@@ -27,6 +27,7 @@ files=(
   "config/shell/zsh/.zshrc:$HOME/.zshrc"
   "config/git/.gitconfig:$HOME/.gitconfig"
   "config/git/.gitignore:$HOME/.gitignore"
+  "config/git/.gitattributes:$HOME/.gitattributes"
   "config/tmux/.tmux.conf:$HOME/.tmux.conf"
   "config/vim/.vimrc:$HOME/.vimrc"
   "config/shell/zsh/mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"

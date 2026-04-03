@@ -1,0 +1,43 @@
+# グローバル .gitattributes
+# リポジトリ固有の .gitattributes で上書き可能
+
+# ===== 改行コードの正規化 =====
+# リポジトリには LF で保存、チェックアウト時は OS のデフォルトに変換
+* text=auto
+
+# テキストファイルは明示的に LF に統一
+*.sh    text eol=lf
+*.bash  text eol=lf
+*.zsh   text eol=lf
+*.py    text eol=lf
+*.rb    text eol=lf
+*.js    text eol=lf
+*.ts    text eol=lf
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.toml  text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.conf  text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.sql   text eol=lf
+Makefile text eol=lf
+
+# ===== バイナリファイル (diff・merge 対象外) =====
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.svg   binary
+*.pdf   binary
+*.zip   binary
+*.gz    binary
+*.tar   binary
+*.mp4   binary
+*.mp3   binary
+*.ttf   binary
+*.woff  binary
+*.woff2 binary

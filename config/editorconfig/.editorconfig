@@ -1,0 +1,35 @@
+# EditorConfig — https://editorconfig.org
+# エディタ・IDE 間でインデントや改行コードを統一する
+# VS Code: EditorConfig for VS Code 拡張が必要
+# Vim: editorconfig-vim プラグインが必要
+
+root = true
+
+# ===== デフォルト (全ファイル) =====
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# ===== Web =====
+[*.{html,css,scss,js,ts,jsx,tsx,json,yaml,yml}]
+indent_size = 2
+
+# ===== Shell =====
+[*.{sh,bash,zsh}]
+indent_size = 2
+
+# ===== Makefile (タブ必須) =====
+[Makefile]
+indent_style = tab
+
+# ===== Markdown (末尾スペースは改行として使われるため保持) =====
+[*.md]
+trim_trailing_whitespace = false
+
+# ===== Go (タブが標準) =====
+[*.go]
+indent_style = tab

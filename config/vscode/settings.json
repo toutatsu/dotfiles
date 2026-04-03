@@ -1,0 +1,94 @@
+{
+    // ===== Editor =====
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [80, 120],
+    "editor.wordWrap": "off",
+    "editor.renderWhitespace": "selection",
+    "editor.formatOnSave": false,
+
+    // ブラケットの対応を色分け表示
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+
+    // 現在のスコープ（クラス・関数名など）をエディタ上部に固定表示
+    "editor.stickyScroll.enabled": true,
+
+    // カーソル行を薄くハイライト
+    "editor.renderLineHighlight": "line",
+
+    // ===== Files =====
+    "files.encoding": "utf8",
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.autoSave": "off",
+    "files.exclude": {
+        "**/.git": true,
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    },
+
+    // ===== Search =====
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/__pycache__": true
+    },
+
+    // ===== Workbench =====
+    // 新しいファイルをプレビュータブではなく確定タブで開く
+    "workbench.editor.enablePreview": false,
+    // 起動時に空のエディタを表示（前回のファイルは開かない）
+    "workbench.startupEditor": "none",
+    // ファイルツリーのインデント幅
+    "workbench.tree.indent": 16,
+
+    // ===== Explorer =====
+    // 削除・移動の確認ダイアログを表示しない（Vim ユーザーは手元で管理しやすい）
+    "explorer.confirmDelete": true,
+    "explorer.confirmDragAndDrop": false,
+
+    // ===== Terminal =====
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    // ターミナルのスクロールバック行数
+    "terminal.integrated.scrollback": 5000,
+
+    // ===== Git =====
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    // diff を inline ではなく横並びで表示
+    "diffEditor.renderSideBySide": true,
+
+    // ===== Privacy =====
+    // テレメトリを無効化
+    "telemetry.telemetryLevel": "off",
+
+    // ===== Extensions =====
+
+    // VSCode Vim (vscodevim.vim)
+    "vim.useSystemClipboard": true,
+    "vim.hlsearch": true,       // 検索結果をハイライト
+    "vim.incsearch": true,      // インクリメンタル検索
+    "vim.ignorecase": true,     // 検索で大文字小文字を無視
+    "vim.smartcase": true,      // 大文字を含む場合は case-sensitive に戻す
+    "vim.leader": "<Space>",    // <leader> キーをスペースに設定
+
+    // Copilot — disable by default (enable per project as needed)
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+
+    // Docker Compose formatter
+    "[dockercompose]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-containers"
+    },
+
+    // Python
+    "python.analysis.typeCheckingMode": "standard",
+
+    // ===== Claude Code =====
+    "claudeCode.preferredLocation": "panel"
+}

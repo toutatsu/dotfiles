@@ -38,6 +38,12 @@ config/
     zsh/  → .zshrc, mytheme.zsh-theme
   tmux/   → .tmux.conf
   vim/    → .vimrc
+  vscode/
+    settings.json          → ~/.config/Code/User/settings.json
+  editorconfig/
+    .editorconfig          → ~/.editorconfig
+  ssh/
+    config.example         — ~/.ssh/config のテンプレート (シンボリックリンク非対象)
 ```
 
 ## Architecture

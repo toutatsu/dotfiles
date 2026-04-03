@@ -1,0 +1,27 @@
+# ~/.ssh/config — SSH クライアント設定テンプレート
+# 実際の設定は config.example をコピーして ~/.ssh/config として使用する
+#
+# cp config/ssh/config.example ~/.ssh/config
+# chmod 600 ~/.ssh/config
+
+# ===== 共通設定 =====
+Host *
+  # 接続の多重化 (2回目以降の接続を高速化)
+  ControlMaster auto
+  ControlPath ~/.ssh/control/%r@%h:%p
+  ControlPersist 60s
+  # サーバーの生存確認 (60秒ごとに確認、無応答3回でタイムアウト)
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
+
+# ===== ローカルネットワークのホスト例 =====
+# Host <hostname>
+#   HostName <IP or FQDN>
+#   User <username>
+#   IdentityFile ~/.ssh/id_ed25519
+
+# ===== GitHub =====
+# Host github.com
+#   User git
+#   IdentityFile ~/.ssh/id_ed25519_github
+#   AddKeysToAgent yes

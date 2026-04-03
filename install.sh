@@ -33,6 +33,8 @@ files=(
   "config/termux/termux.properties:$HOME/.termux/termux.properties"
   "config/claude/settings.json:$HOME/.claude/settings.json"
   "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
+  "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
+  "config/editorconfig/.editorconfig:$HOME/.editorconfig"
 )
 
 # ---
@@ -101,9 +103,11 @@ fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Claude Code が自動作成しないディレクトリを事前に作成
-if [ "$install" = true ] && [ -d "$HOME/.claude" ]; then
-  mkdir -p "$HOME/.claude/agents"
+# シンボリックリンク先が存在しないディレクトリを事前に作成
+if [ "$install" = true ]; then
+  [ -d "$HOME/.claude" ] && mkdir -p "$HOME/.claude/agents"
+  mkdir -p "$HOME/.ssh/control"
+  chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
 
 for entry in "${files[@]}"; do

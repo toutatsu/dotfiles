@@ -73,6 +73,30 @@
     "vim.smartcase": true,      // 大文字を含む場合は case-sensitive に戻す
     "vim.leader": "<Space>",    // <leader> キーをスペースに設定
 
+    // nnoremap <Esc><Esc> :nohlsearch<CR><ESC>
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<Esc>", "<Esc>"],
+            "commands": [":nohlsearch"]
+        }
+    ],
+
+    // inoremap ;j <Esc>
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [";", "j"],
+            "after": ["<Esc>"]
+        }
+    ],
+
+    // vnoremap ;j <Esc>
+    "vim.visualModeKeyBindings": [
+        {
+            "before": [";", "j"],
+            "after": ["<Esc>"]
+        }
+    ],
+
     // Copilot — disable by default (enable per project as needed)
     "github.copilot.enable": {
         "*": false,

@@ -158,6 +158,11 @@ zle -N zle-line-finish
 # alias l="ls -BFGOPTWaelhis"  # macOS 拡張オプション付き (BSD ls 向け)
 alias l="ls -BFGalhis"
 
+# navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
 # vcs_info フック: クリーン状態と未追跡ファイルをプロンプトに表示する (上の git ブロックと組み合わせる)
 # zstyle ':vcs_info:git+set-message:*' hooks git-is_clean git-untracked
 # # 状態がクリーンか判定

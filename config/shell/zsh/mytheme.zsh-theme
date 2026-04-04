@@ -39,8 +39,8 @@ PROMPT=\
 "\
 
 %(?..%F{196}✘ %?${reset_color})
-╔ %F{207}$SHELL 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}\$(git_prompt_info)
-║ $prompt_level $ %{${reset_color}${_esc}[1B${_cr}${_esc}[?7l╚\$(printf '═%.0s' \$(seq 3 \$COLUMNS))╝${_esc}[?7h${_esc}[1A${_cr}${_esc}[6C%}%F{046}\
+%F{207}$SHELL 👤%F{039}$current_username${reset_color}@%F{111}🖥 %M${reset_color}:%F{226}📁$current_directory${reset_color} %F{244}[$terminal_name] $history_num${reset_color}\$(git_prompt_info)
+$prompt_level $ %F{046}\
 "
 RPROMPT="📅$current_date 🕐$current_time"
 

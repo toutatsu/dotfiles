@@ -73,18 +73,18 @@ setopt share_history
 # hook
 # add-zsh-hook は oh-my-zsh が autoload 済み (手動 autoload 不要)
 # add-zsh-hook preexec my_preexec  # 下枠は mytheme の PROMPT 内で描画するため不要
-add-zsh-hook precmd my_precmd  # 次プロンプト表示前に下枠を描画
+# add-zsh-hook precmd my_precmd  # 次プロンプト表示前に下枠を描画
 
-_first_prompt=true
-my_precmd() {
-    if [[ $_first_prompt == true ]]; then
-        _first_prompt=false  # 初回はスキップ (閉じる枠がないため)
-    else
-        printf "${reset_color}╚"
-        printf '═%.0s' $(seq 3 $COLUMNS)
-        printf "╝\n"
-    fi
-}
+# _first_prompt=true
+# my_precmd() {
+#     if [[ $_first_prompt == true ]]; then
+#         _first_prompt=false  # 初回はスキップ (閉じる枠がないため)
+#     else
+#         printf "${reset_color}╚"
+#         printf '═%.0s' $(seq 3 $COLUMNS)
+#         printf "╝\n"
+#     fi
+# }
 
 # my_preexec() {
 #     printf "${reset_color}"
@@ -94,10 +94,10 @@ my_precmd() {
 # }
 
 # Enter 時に cursor magic で描いた下枠を消去 (コマンド出力との混在を防ぐ)
-zle-line-finish() {
-    print -n $'\e[1B\r\e[2K\e[1A'
-}
-zle -N zle-line-finish
+# zle-line-finish() {
+#     print -n $'\e[1B\r\e[2K\e[1A'
+# }
+# zle -N zle-line-finish
 
 # prompt (oh-my-zsh テーマ不使用時の手動定義)
 # PROMPT="${fg[magenta]}Zsh ${fg[green]}%n${reset_color}@${fg[cyan]}%M${reset_color}:${fg[yellow]}%~ ${reset_color}[ %D %* ]

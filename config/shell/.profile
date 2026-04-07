@@ -17,6 +17,7 @@ else
   agent_pid=$(pgrep ssh-agent)
   if [ -z "$agent_pid" ]; then
     eval "$(ssh-agent -s)"
+    echo 'ssh-agent started.'
   fi
 
   # SSH 鍵が登録されていない場合、登録する

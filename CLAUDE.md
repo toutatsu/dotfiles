@@ -44,6 +44,8 @@ config/
     .editorconfig          → ~/.editorconfig
   ssh/
     config.example         — ~/.ssh/config のテンプレート (シンボリックリンク非対象)
+  termux/
+    termux.properties      → ~/.termux/termux.properties (Termux 環境のみ)
 ```
 
 ## Architecture
@@ -59,7 +61,7 @@ config/
 2. `.zshrc` — oh-my-zsh `vi-mode` plugin
 3. `.vimrc` — vim keybindings (`;j` to exit insert/visual/command mode, `<Esc><Esc>` to clear search)
 
-**Git aliases** (`loggraph`, `tree`) are in `.gitconfig`. Pull strategy is fast-forward only.
+**Git aliases** in `.gitconfig`: `co` (checkout), `br` (branch), `st` (status), `d` (diff), `loggraph` (graph log with colors), `tree` (compact graph log). Pull strategy is fast-forward only. `[user]` identity is intentionally omitted — set per-repo via `git config --local user.name/email` or environment variables.
 
 **Tmux** uses `screen-256color` terminal type.
 
@@ -69,16 +71,28 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 
 ## Claude Code Setup
 
-`settings.json` is managed here. MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
+`config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
+Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
 
-To add MCP servers manually after install:
+MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
+Reason: `~/.claude.json` contains API tokens alongside server URLs, so it must stay out of git.
+
+### MCP Servers
+
+Add MCP servers manually after install. Known servers:
 
 ```bash
-# GitHub (requires GITHUB_PERSONAL_ACCESS_TOKEN)
+# GitHub (requires GITHUB_PERSONAL_ACCESS_TOKEN env var)
 claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 
-# その他は `claude mcp add` で随時追加
-claude mcp list   # 登録済みサーバー一覧
+# 登録済みサーバー一覧
+claude mcp list
 ```
 
-Agents in `config/claude/agents/` are symlinked to `~/.claude/agents/` and available across all projects.
+### Agents
+
+`config/claude/agents/` is symlinked to `~/.claude/agents/` and available across all projects.
+
+| Agent | Description |
+|-------|-------------|
+| `code-reviewer` | git diff でコードを確認し、セキュリティ・品質・可読性の観点でレビューする |

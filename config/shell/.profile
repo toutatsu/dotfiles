@@ -21,6 +21,7 @@ else
 
   if [ $_ssh_status -eq 2 ]; then
     # エージェント未起動またはソケットが無効 → 再起動
+    mkdir -p -m 700 "$HOME/.ssh"
     rm -f "$SSH_AUTH_SOCK"
     ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
     echo 'ssh-agent started.'

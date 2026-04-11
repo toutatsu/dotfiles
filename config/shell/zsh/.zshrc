@@ -14,6 +14,9 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="mytheme"
 
+# vi-mode プラグイン: NORMAL モード時のインジケーター
+MODE_INDICATOR="%F{196}[N]%f"
+
 # ランダムテーマ選択用: ZSH_THEME="random" と組み合わせる
 # ZSH_THEME_RANDOM_CANDIDATES=(
 #   "rkj"

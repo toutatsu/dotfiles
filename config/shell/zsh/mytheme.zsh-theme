@@ -48,7 +48,7 @@ PROMPT=\
 
 %(?..${color_error}✘ %?${reset_color})
 ${color_shell}$SHELL 👤${color_user}$current_username${reset_color}@${color_host}🖥 $current_host${reset_color}:${color_dir}📁$current_directory${reset_color} ${color_meta}[$terminal_name] $history_num${reset_color}\$(git_prompt_info)
-$prompt_level $ ${color_input}\
+$prompt_level \$(vi_mode_prompt_info) $ ${color_input}\
 "
 RPROMPT="📅$current_date 🕐$current_time"
 

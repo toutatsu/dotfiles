@@ -6,8 +6,8 @@
         excludesfile = ~/.gitignore
         attributesfile = ~/.gitattributes
 [user]
-        ; name = toutatsu
-        ; email = toutatsu.00223+git@gmail.com
+        name = toutatsu
+        email = toutatsu.00223+git@gmail.com
 [init]
         defaultBranch = main
 [pull]

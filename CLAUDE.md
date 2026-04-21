@@ -42,6 +42,8 @@ config/
     settings.json          → ~/.config/Code/User/settings.json
   editorconfig/
     .editorconfig          → ~/.editorconfig
+  opencode/
+    opencode.json          → ~/.config/opencode/opencode.json
   ssh/
     config.example         — ~/.ssh/config のテンプレート (シンボリックリンク非対象)
   termux/

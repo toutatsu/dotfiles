@@ -36,6 +36,7 @@ files=(
   "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
   "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
+  "config/opencode/opencode.json:$HOME/.config/opencode/opencode.json"
 )
 
 # ---
@@ -107,6 +108,7 @@ echo ""
 # シンボリックリンク先が存在しないディレクトリを事前に作成
 if [ "$install" = true ]; then
   [ -d "$HOME/.claude" ] && mkdir -p "$HOME/.claude/agents"
+  mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.ssh/control"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi

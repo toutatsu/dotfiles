@@ -1,0 +1,39 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // 更新通知のみ受け取り、自動インストールはしない
+  "autoupdate": "notify",
+
+  // セッションの共有を無効化
+  "share": "disabled",
+
+  // デフォルトで使用するモデル
+  "model": "openai/gpt-4o",
+
+  // プロバイダー設定
+  "provider": {
+    "openai": {
+      "options": {
+        // OPENAI_API_KEY 環境変数から API キーを読み込む
+        "apiKey": "{env:OPENAI_API_KEY}",
+        // OpenAI API のエンドポイント (デフォルト値)
+        "baseURL": "https://api.openai.com/v1"
+      },
+      // 利用可能なモデル一覧
+      "models": {
+        "gpt-4o": {
+          "name": "GPT-4o"
+        },
+        "gpt-4o-mini": {
+          "name": "GPT-4o mini"
+        },
+        "o1": {
+          "name": "o1"
+        },
+        "o3-mini": {
+          "name": "o3-mini"
+        }
+      }
+    }
+  }
+}

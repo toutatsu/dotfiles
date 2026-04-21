@@ -43,7 +43,7 @@ config/
   editorconfig/
     .editorconfig          → ~/.editorconfig
   opencode/
-    opencode.json          → ~/.config/opencode/opencode.json
+    opencode.jsonc         → ~/.config/opencode/opencode.jsonc
   ssh/
     config.example         — ~/.ssh/config のテンプレート (シンボリックリンク非対象)
   termux/

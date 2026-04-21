@@ -36,7 +36,7 @@ files=(
   "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
   "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
-  "config/opencode/opencode.json:$HOME/.config/opencode/opencode.json"
+  "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
 )
 
 # ---

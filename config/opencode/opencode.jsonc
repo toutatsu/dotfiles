@@ -34,6 +34,34 @@
           "name": "o3-mini"
         }
       }
+    },
+    
+    "llamacpp-local": {
+      "name": "llama.cpp (Local)",
+      "options": {
+        // OPENAI_API_KEY 環境変数から API キーを読み込む
+        // "apiKey": "{env:OPENAI_API_KEY}",
+        "apiKey": "dummy",
+        // OpenAI API のエンドポイント (デフォルト値)
+        // "baseURL": "https://api.openai.com/v1"
+      },
+      // 利用可能なモデル一覧
+      "models": {
+        "unsloth/gpt-oss-20b-GGUF:Q4_K_M": {
+          "name": "gpt-oss:20B(local)"
+        },
+        "unsloth/gemma-4-31B-it-GGUF:Q4_K_M": {
+          "name": "gemma4:31B(local)"
+        },
+        "unsloth/Qwen3.6-35B-A3B-GGUF:Q4_K_M": {
+          "name": "qwen3.6:35B(local)"
+        },
+        "unsloth/Qwen3.5-27B-GGUF:Q4_K_M": {
+          "name": "qwen3.5:27B(local)"
+        }
+      }
     }
   }
 }
+
+

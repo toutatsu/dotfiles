@@ -10,7 +10,7 @@
 - Never nest subagents (subagents cannot spawn further subagents).
 
 ### Context Management
-- Run `/compact` proactively before context grows too large, not only when forced.
+- Run `/compact` at natural breakpoints (after a task completes, before starting a new one), not only when forced or near the limit.
 - Prefer the Explore subagent (uses Haiku — cheaper) over general-purpose agents for codebase exploration.
 
 ### CLAUDE.md Files

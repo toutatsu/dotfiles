@@ -44,6 +44,9 @@ config/
     .editorconfig          → ~/.editorconfig
   opencode/
     opencode.jsonc         → ~/.config/opencode/opencode.jsonc
+    tui.json               → ~/.config/opencode/tui.json
+  openclaw/
+    openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
     config.example         — ~/.ssh/config のテンプレート (シンボリックリンク非対象)
   termux/
@@ -89,6 +92,19 @@ claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 
 # 登録済みサーバー一覧
 claude mcp list
+```
+
+## OpenClaw Setup
+
+`config/openclaw/openclaw.json.example` はテンプレート (シンボリックリンク非対象)。
+`~/.openclaw/openclaw.json` は `openclaw onboard` が自動生成・更新するため、直接管理しない。
+トークン (`gateway.auth.token`) が含まれるため git 管理対象外。
+
+新環境セットアップ手順:
+```bash
+npm install -g openclaw@latest
+openclaw onboard --install-daemon
+# 必要に応じてテンプレートを参考に ~/.openclaw/openclaw.json を調整
 ```
 
 ### Agents

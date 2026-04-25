@@ -29,6 +29,7 @@ All files are under `config/`. `mytheme.zsh-theme` is deployed to `~/.oh-my-zsh/
 ```
 config/
   claude/
+    CLAUDE.md              → ~/.claude/CLAUDE.md
     settings.json          → ~/.claude/settings.json
     agents/
       code-reviewer.md     → ~/.claude/agents/code-reviewer.md
@@ -76,6 +77,7 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 
 ## Claude Code Setup
 
+`config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (token efficiency, subagent usage, response style).
 `config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
 Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
 

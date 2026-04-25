@@ -32,11 +32,13 @@ files=(
   "config/vim/.vimrc:$HOME/.vimrc"
   "config/shell/zsh/mytheme.zsh-theme:$HOME/.oh-my-zsh/themes/mytheme.zsh-theme"
   "config/termux/termux.properties:$HOME/.termux/termux.properties"
+  "config/claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
   "config/claude/settings.json:$HOME/.claude/settings.json"
   "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
   "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
+  "config/opencode/tui.json:$HOME/.config/opencode/tui.json"
 )
 
 # ---

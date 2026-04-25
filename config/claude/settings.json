@@ -1,24 +1,49 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+
+
+  "language": "japanese",
+  "model": "sonnet",
+  "effortLevel": "medium",
+
+
+  "theme": "auto",
+  "editorMode": "vim",
+  "tui": "fullscreen",
+  "defaultView": "chat",
+  "verbose": false,
+  "showTurnDuration": true,
+  "showMessageTimestamps": true,
+  "prefersReducedMotion": false,
+  "promptSuggestionEnabled": true,
+
+
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 100000,
+  "alwaysThinkingEnabled": false,
+  "showThinkingSummaries": false,
+  "skillListingMaxDescChars": 512,
+  "cleanupPeriodDays": 30,
+  "includeGitInstructions": true,
+
+
+  "fileCheckpointingEnabled": true,
+  "todoFeatureEnabled": true,
+
+
+  "preferredNotifChannel": "terminal_bell",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+
+
   "permissions": {
     "allow": [
       "Bash(git *)",
       "Bash(make *)"
     ]
   },
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
-  },
-  "language": "japanese",
-  "autoCompactEnabled": true,
-  "alwaysThinkingEnabled": false,
-  "skillListingMaxDescChars": 512,
-  "preferredNotifChannel": "terminal_bell",
-  "inputNeededNotifEnabled": true,
+
+
   "hooks": {
     "Stop": [
       {
@@ -31,6 +56,17 @@
       }
     ]
   },
+
+
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  },
+
+
   "skillOverrides": {
     "update-config": "on",
     "keybindings-help": "on",
@@ -39,25 +75,28 @@
     "loop": "on",
     "schedule": "on",
     "claude-api": "on",
-    "superpowers:brainstorm": "on",
-    "superpowers:execute-plan": "on",
-    "superpowers:write-plan": "on",
-    "code-review:code-review": "on",
-    "superpowers:subagent-driven-development": "on",
-    "superpowers:finishing-a-development-branch": "on",
-    "superpowers:dispatching-parallel-agents": "on",
-    "superpowers:writing-skills": "on",
-    "superpowers:verification-before-completion": "on",
-    "superpowers:test-driven-development": "on",
-    "superpowers:using-git-worktrees": "on",
+
     "superpowers:using-superpowers": "on",
-    "superpowers:receiving-code-review": "on",
-    "superpowers:writing-plans": "on",
-    "superpowers:requesting-code-review": "on",
+    "superpowers:brainstorm": "on",
     "superpowers:brainstorming": "on",
+    "superpowers:write-plan": "on",
+    "superpowers:writing-plans": "on",
+    "superpowers:execute-plan": "on",
     "superpowers:executing-plans": "on",
     "superpowers:systematic-debugging": "on",
+    "superpowers:test-driven-development": "on",
+    "superpowers:subagent-driven-development": "on",
+    "superpowers:dispatching-parallel-agents": "on",
+    "superpowers:using-git-worktrees": "on",
+    "superpowers:finishing-a-development-branch": "on",
+    "superpowers:writing-skills": "on",
+    "superpowers:verification-before-completion": "on",
+    "superpowers:requesting-code-review": "on",
+    "superpowers:receiving-code-review": "on",
+
+    "code-review:code-review": "on",
     "frontend-design:frontend-design": "on",
+
     "init": "on",
     "review": "on",
     "security-review": "on"

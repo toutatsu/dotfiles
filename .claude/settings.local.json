@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p config/git config/shell/bash config/shell/zsh config/tmux config/vim)",
+      "Bash(mv .gitconfig .gitignore config/git/)",
+      "Bash(mv .inputrc .profile config/shell/)",
+      "Bash(mv .bash_profile .bashrc config/shell/bash/)",
+      "Bash(mv .zshrc mytheme.zsh-theme config/shell/zsh/)",
+      "WebSearch",
+      "WebFetch(domain:opencode.ai)",
+      "mcp__plugin_context7_context7__query-docs",
+      "WebFetch(domain:docs.openclaw.ai)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Read(//home/toutatsu/.claude/**)"
+    ]
+  }
+}

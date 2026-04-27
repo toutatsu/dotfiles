@@ -1,14 +1,60 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
+
   // 更新通知のみ受け取り、自動インストールはしない
   "autoupdate": "notify",
 
-  // セッションの共有を無効化
+  // セッションの共有を無効化（手動で共有したい場合は "manual" に変更）
   "share": "disabled",
+
+  // ユーザー名（セッション共有時などに表示される）
+  // "username": "toutatsu",
+
 
   // デフォルトで使用するモデル
   "model": "openai/gpt-4o",
+
+  // 軽量タスク（コード補完・要約など）に使用するサブモデル
+  // "small_model": "openai/gpt-4o-mini",
+
+  // デフォルトエージェント（build / ask など）
+  // "default_agent": "build",
+
+
+  // ログレベル: DEBUG / INFO / WARN / ERROR
+  "logLevel": "WARN",
+
+  // 古いセッションデータの自動削除
+  // "cleanupDays": 30,
+
+  // ファイル変更のスナップショット（undo サポート）
+  "snapshot": true,
+
+
+  // 追加で読み込む指示ファイル（AGENTS.md や独自 markdown）
+  // "instructions": ["./AGENTS.md"],
+
+
+  // ツール出力の上限
+  "tool_output": {
+    // 最大行数（デフォルト: 2000）
+    "max_lines": 2000,
+    // 最大バイト数（デフォルト: 51200 = 50KB）
+    "max_bytes": 51200
+  },
+
+
+  // コンテキスト自動圧縮
+  "compaction": {
+    // コンテキスト上限に近づいたら自動で圧縮
+    "auto": true,
+    // 不要な古いターンを削除して圧縮
+    "prune": true,
+    // 末尾から保持するターン数（最新の会話を残す）
+    "tail_turns": 3
+  },
+
 
   // プロバイダー設定
   "provider": {
@@ -16,7 +62,7 @@
       "options": {
         // OPENAI_API_KEY 環境変数から API キーを読み込む
         "apiKey": "{env:OPENAI_API_KEY}",
-        // OpenAI API のエンドポイント (デフォルト値)
+        // OpenAI API のエンドポイント（デフォルト値）
         "baseURL": "https://api.openai.com/v1"
       },
       // 利用可能なモデル一覧
@@ -35,15 +81,13 @@
         }
       }
     },
-    
+
     "llamacpp-local": {
       "name": "llama.cpp (Local)",
       "options": {
-        // OPENAI_API_KEY 環境変数から API キーを読み込む
-        // "apiKey": "{env:OPENAI_API_KEY}",
-        "apiKey": "dummy",
-        // OpenAI API のエンドポイント (デフォルト値)
-        // "baseURL": "https://api.openai.com/v1"
+        "apiKey": "dummy"
+        // ローカルサーバーを立てた場合は baseURL を指定
+        // "baseURL": "http://localhost:8080/v1"
       },
       // 利用可能なモデル一覧
       "models": {
@@ -63,5 +107,3 @@
     }
   }
 }
-
-

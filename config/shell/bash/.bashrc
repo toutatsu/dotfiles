@@ -24,3 +24,4 @@ echo_color() {
 }
 
 export PS1="\[$(echo_color magenta \\s) $(echo_color green \\u)@$(echo_color cyan \\H):$(echo_color yellow \\w) [ \D{%Y/%m/%d} \t ]\] command:\# \! UID:\$\n$ "
+export PATH="$HOME/.npm-global/bin:$PATH"

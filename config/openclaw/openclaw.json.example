@@ -1,20 +1,40 @@
 {
+  // OpenClaw 設定ファイルテンプレート
+  // 実際の設定は ~/.openclaw/openclaw.json に配置する（シンボリックリンク非対象）
+  // セットアップ: openclaw onboard --install-daemon
+  // 検証:        openclaw doctor
+  // スキーマ確認: openclaw config schema
+
   "agents": {
     "defaults": {
       "workspace": "/home/YOUR_USERNAME/.openclaw/workspace",
+
+      // 使用可能なモデル一覧（claude-cli プロバイダー経由）
       "models": {
         "claude-cli/claude-opus-4-7": {},
         "claude-cli/claude-sonnet-4-6": {},
-        "claude-cli/claude-opus-4-6": {},
-        "claude-cli/claude-opus-4-5": {},
-        "claude-cli/claude-sonnet-4-5": {},
         "claude-cli/claude-haiku-4-5": {}
       },
+
+      // プライマリモデルとフォールバック
       "model": {
-        "primary": "claude-cli/claude-opus-4-7"
+        "primary": "claude-cli/claude-sonnet-4-6",
+        "fallbacks": ["claude-cli/claude-haiku-4-5"]
+      },
+
+      // コンテキスト制限
+      "contextLimits": {
+        "memoryGetMaxChars": 20000,
+        "toolResultMaxChars": 40000
+      },
+
+      // コンテキスト圧縮（長いセッションでのトークン節約）
+      "compaction": {
+        "keepRecentTokens": 8000
       }
     }
   },
+
   "gateway": {
     "mode": "local",
     "auth": {
@@ -22,6 +42,7 @@
       "token": "YOUR_GATEWAY_TOKEN"
     },
     "port": 18789,
+    // loopback: ローカル接続のみ（推奨）。"all" にすると LAN 全体に公開
     "bind": "loopback",
     "tailscale": {
       "mode": "off",
@@ -30,6 +51,7 @@
     "controlUi": {
       "allowInsecureAuth": true
     },
+    // 危険なノードコマンドをデフォルト無効化
     "nodes": {
       "denyCommands": [
         "camera.snap",
@@ -43,10 +65,14 @@
       ]
     }
   },
+
   "session": {
+    // per-channel-peer: チャネルとペアの組み合わせごとにセッションを分離
     "dmScope": "per-channel-peer"
   },
+
   "tools": {
+    // プロファイル: "coding" | "general" | "minimal"
     "profile": "coding",
     "web": {
       "search": {
@@ -55,6 +81,7 @@
       }
     }
   },
+
   "auth": {
     "profiles": {
       "anthropic:claude-cli": {
@@ -63,6 +90,7 @@
       }
     }
   },
+
   "plugins": {
     "entries": {
       "ollama": {
@@ -73,9 +101,25 @@
       }
     }
   },
+
   "skills": {
     "install": {
+      // パッケージマネージャ: "npm" | "yarn" | "pnpm" | "bun"
       "nodeManager": "npm"
+    }
+  },
+
+  // 自動更新チャネル: "stable" | "beta" | "dev"
+  "update": {
+    "channel": "stable"
+  },
+
+  "logging": {
+    "level": "info",
+    // ログファイルに保存する場合は以下を有効化
+    // "file": "~/.openclaw/logs/gateway.log"
+    "redact": {
+      "enabled": true
     }
   }
 }

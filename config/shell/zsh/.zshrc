@@ -180,3 +180,10 @@ alias ....="cd ../../.."
 #         hook_com[unstaged]+='%F{red}✗%f'
 #     fi
 # }
+
+# opencode
+export PATH=/home/toutatsu/.opencode/bin:$PATH
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# OpenClaw Completion
+source "/home/toutatsu/.openclaw/completions/openclaw.zsh"

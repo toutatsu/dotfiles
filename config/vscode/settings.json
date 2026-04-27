@@ -114,5 +114,6 @@
     "python.analysis.typeCheckingMode": "standard",
 
     // ===== Claude Code =====
-    "claudeCode.preferredLocation": "panel"
+    "claudeCode.preferredLocation": "panel",
+    "chat.disableAIFeatures": true
 }

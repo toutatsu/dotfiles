@@ -9,7 +9,7 @@
   "share": "disabled",
 
   // ユーザー名（セッション共有時などに表示される）
-  // "username": "toutatsu",
+  // "username": "{env:USER}",
 
 
   // デフォルトで使用するモデル

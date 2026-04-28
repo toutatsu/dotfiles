@@ -36,6 +36,29 @@
   // "instructions": ["./AGENTS.md"],
 
 
+  // ツールのパーミッション設定
+  // 値: "allow"（自動許可）/ "ask"（都度確認）/ "deny"（禁止）
+  "permission": {
+    // デフォルトは都度確認
+    "*": "ask",
+    // ファイル読み取りは自動許可
+    "read": "allow",
+    // bash コマンドはコマンド単位で制御
+    "bash": {
+      "*": "ask",
+      "git *": "allow",
+      "git commit *": "ask",
+      "git push *": "ask",
+      "grep *": "allow",
+      "find *": "allow"
+    },
+    // .env 系ファイルへのアクセスを禁止
+    "read(*.env)": "deny",
+    "read(*.env.*)": "deny",
+    "read(*.env.example)": "allow"
+  },
+
+
   // ツール出力の上限
   "tool_output": {
     // 最大行数（デフォルト: 2000）

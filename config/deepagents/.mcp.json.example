@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+
+    // ローカル MCP サーバー（stdio 経由）
+    // "filesystem": {
+    //   "command": "npx",
+    //   "args": ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"],
+    //   "env": {}
+    // },
+
+    // GitHub (requires GITHUB_TOKEN env var)
+    // "github": {
+    //   "command": "npx",
+    //   "args": ["-y", "@modelcontextprotocol/server-github"],
+    //   "env": { "GITHUB_TOKEN": "your-token" }
+    // },
+
+    // リモート MCP サーバー（SSE/HTTP 経由）
+    // "remote-example": {
+    //   "type": "sse",
+    //   "url": "https://api.example.com/mcp",
+    //   "headers": { "Authorization": "Bearer your-token" }
+    // }
+
+  }
+}

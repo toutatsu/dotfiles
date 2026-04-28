@@ -48,6 +48,8 @@ config/
     tui.json               → ~/.config/opencode/tui.json
   deepagents/
     config.toml            → ~/.deepagents/config.toml
+    .mcp.json              → ~/.deepagents/.mcp.json
+    .mcp.json.example      — .mcp.json の設定例テンプレート (シンボリックリンク非対象)
     .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)

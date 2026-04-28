@@ -39,6 +39,7 @@ files=(
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
   "config/opencode/tui.json:$HOME/.config/opencode/tui.json"
+  "config/deepagents/config.toml:$HOME/.deepagents/config.toml"
 )
 
 # ---
@@ -111,6 +112,7 @@ echo ""
 if [ "$install" = true ]; then
   [ -d "$HOME/.claude" ] && mkdir -p "$HOME/.claude/agents"
   mkdir -p "$HOME/.config/opencode"
+  mkdir -p "$HOME/.deepagents"
   mkdir -p "$HOME/.ssh/control"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi

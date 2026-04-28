@@ -46,6 +46,9 @@ config/
   opencode/
     opencode.jsonc         → ~/.config/opencode/opencode.jsonc
     tui.json               → ~/.config/opencode/tui.json
+  deepagents/
+    config.toml            → ~/.deepagents/config.toml
+    .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
@@ -95,6 +98,19 @@ claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 # 登録済みサーバー一覧
 claude mcp list
 ```
+
+## DeepAgents CLI Setup
+
+`config/deepagents/config.toml` は `~/.deepagents/config.toml` にシンボリックリンクされる。
+`~/.deepagents/.env`（APIキー）は git 管理外。テンプレートから作成する:
+
+```bash
+uv tool install deepagents-cli
+cp config/deepagents/.env.example ~/.deepagents/.env
+# ~/.deepagents/.env にAPIキーを設定
+```
+
+ローカルの llama.cpp API を使う場合は `llama-server` をポート 8080 で起動しておく。
 
 ## OpenClaw Setup
 

@@ -1,0 +1,35 @@
+# Deep Agents CLI 設定ファイル
+# 詳細: https://docs.langchain.com/oss/python/deepagents/cli/overview
+
+[models]
+# デフォルトモデル（起動時に使用される）
+default = "llamacpp-local/qwen3:4b"
+
+# シェルコマンドの許可リスト
+# "recommended": 安全なデフォルトセット（git, grep, find など）
+# "all": すべて許可 / カンマ区切りで個別指定も可
+shell_allow_list = "recommended"
+
+
+# --- プロバイダー設定 ---
+
+[models.providers.anthropic]
+enabled = true
+api_key_env = "ANTHROPIC_API_KEY"
+
+[models.providers.openai]
+enabled = true
+api_key_env = "OPENAI_API_KEY"
+
+# ローカル llama.cpp API サーバー
+# `llama-server` をポート 8080 で起動しておく必要がある
+# 起動例: llama-server -m model.gguf --port 8080
+[models.providers.llamacpp-local]
+enabled = true
+base_url = "http://localhost:8080/v1"
+
+# モデルプロファイル: tool calling 対応とトークン上限を明示
+[models.providers.llamacpp-local.profile."qwen3:4b"]
+tool_calling = true
+max_input_tokens = 32768
+max_output_tokens = 8192

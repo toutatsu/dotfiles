@@ -147,7 +147,7 @@ echo ""
 if [ "$install" = true ]; then
   [ -d "$HOME/.claude" ] && mkdir -p "$HOME/.claude/agents"
   mkdir -p "$HOME/.config/opencode"
-  mkdir -p "$HOME/.deepagents"
+  mkdir -p "$HOME/.deepagents/agent"
   mkdir -p "$HOME/.ssh/control"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
@@ -160,7 +160,8 @@ done
 
 # ディレクトリ単位でシンボリックリンクするエントリ
 dirs=(
-  "config/deepagents/agents:$HOME/.deepagents/agents"
+  "config/deepagents/agents:$HOME/.deepagents/agent/agents"
+  "config/deepagents/skills:$HOME/.deepagents/agent/skills"
   "config/claude/skills:$HOME/.claude/skills"
 )
 

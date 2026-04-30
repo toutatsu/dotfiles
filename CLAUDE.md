@@ -56,11 +56,13 @@ config/
     .mcp.json              → ~/.deepagents/.mcp.json
     .mcp.json.example      — .mcp.json の設定例テンプレート (シンボリックリンク非対象)
     .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
-    agents/                → ~/.deepagents/agents/ (ディレクトリごとシンボリックリンク)
+    agents/                → ~/.deepagents/agent/agents/ (ディレクトリごとシンボリックリンク)
       researcher/AGENTS.md
       code-writer/AGENTS.md
       git-assistant/AGENTS.md
       _template/AGENTS.md  — 新規サブエージェント作成用テンプレート
+    skills/                → ~/.deepagents/agent/skills/ (ディレクトリごとシンボリックリンク)
+      _template/SKILL.md   — 新規スキル作成用テンプレート
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/

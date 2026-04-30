@@ -38,6 +38,7 @@ files=(
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
   "config/opencode/tui.json:$HOME/.config/opencode/tui.json"
+  "config/opencode/AGENTS.md:$HOME/.config/opencode/AGENTS.md"
   "config/deepagents/config.toml:$HOME/.deepagents/config.toml"
   "config/deepagents/.mcp.json:$HOME/.deepagents/.mcp.json"
   # "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"  # エラーが発生するため無効化
@@ -163,6 +164,8 @@ dirs=(
   "config/deepagents/skills:$HOME/.deepagents/agent/skills"
   "config/claude/agents:$HOME/.claude/agents"
   "config/claude/skills:$HOME/.claude/skills"
+  "config/opencode/agents:$HOME/.config/opencode/agents"
+  "config/opencode/skills:$HOME/.config/opencode/skills"
 )
 
 for entry in "${dirs[@]}"; do

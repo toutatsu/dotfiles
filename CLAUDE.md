@@ -52,6 +52,11 @@ config/
   opencode/
     opencode.jsonc         → ~/.config/opencode/opencode.jsonc
     tui.json               → ~/.config/opencode/tui.json
+    AGENTS.md              → ~/.config/opencode/AGENTS.md
+    agents/                → ~/.config/opencode/agents/ (ディレクトリごとシンボリックリンク)
+      code-reviewer.md
+    skills/                → ~/.config/opencode/skills/ (ディレクトリごとシンボリックリンク)
+      _template/SKILL.md   — 新規スキル作成用テンプレート
   deepagents/
     config.toml            → ~/.deepagents/config.toml
     .mcp.json              → ~/.deepagents/.mcp.json

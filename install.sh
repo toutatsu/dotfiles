@@ -34,7 +34,6 @@ files=(
   "config/termux/termux.properties:$HOME/.termux/termux.properties"
   "config/claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
   "config/claude/settings.json:$HOME/.claude/settings.json"
-  "config/claude/agents/code-reviewer.md:$HOME/.claude/agents/code-reviewer.md"
   "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
@@ -145,7 +144,6 @@ echo ""
 
 # シンボリックリンク先が存在しないディレクトリを事前に作成
 if [ "$install" = true ]; then
-  [ -d "$HOME/.claude" ] && mkdir -p "$HOME/.claude/agents"
   mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.deepagents/agent"
   mkdir -p "$HOME/.ssh/control"
@@ -162,6 +160,7 @@ done
 dirs=(
   "config/deepagents/agents:$HOME/.deepagents/agent/agents"
   "config/deepagents/skills:$HOME/.deepagents/agent/skills"
+  "config/claude/agents:$HOME/.claude/agents"
   "config/claude/skills:$HOME/.claude/skills"
 )
 

@@ -31,8 +31,8 @@ config/
   claude/
     CLAUDE.md              → ~/.claude/CLAUDE.md
     settings.json          → ~/.claude/settings.json
-    agents/
-      code-reviewer.md     → ~/.claude/agents/code-reviewer.md
+    agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
+      code-reviewer.md
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
       commit/SKILL.md      — git コミット作成（manual invoke のみ）
       pr/SKILL.md          — GitHub PR 作成（manual invoke のみ）

@@ -54,6 +54,7 @@ config/
   deepagents/
     config.toml            → ~/.deepagents/config.toml
     .mcp.json              → ~/.deepagents/.mcp.json
+    AGENTS.md              → ~/.deepagents/agent/AGENTS.md
     .mcp.json.example      — .mcp.json の設定例テンプレート (シンボリックリンク非対象)
     .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
     agents/                → ~/.deepagents/agent/agents/ (ディレクトリごとシンボリックリンク)

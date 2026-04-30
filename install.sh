@@ -40,6 +40,7 @@ files=(
   "config/opencode/tui.json:$HOME/.config/opencode/tui.json"
   "config/deepagents/config.toml:$HOME/.deepagents/config.toml"
   "config/deepagents/.mcp.json:$HOME/.deepagents/.mcp.json"
+  "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"
 )
 
 # ---

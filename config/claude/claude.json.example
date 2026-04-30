@@ -1,0 +1,34 @@
+{
+  "mcpServers": {
+    "EXAMPLE_user_scoped_server": {
+      "type": "http",
+      "url": "https://example.com/mcp",
+      "note": "user スコープ: 全プロジェクトで利用可能 (claude mcp add --scope user --transport http <name> <url>)"
+    }
+  },
+  "projects": {
+    "/home/YOUR_USER/path/to/project": {
+      "mcpServers": {
+        "context7": {
+          "type": "http",
+          "url": "https://mcp.context7.com/mcp"
+        },
+        "github": {
+          "type": "http",
+          "url": "https://api.githubcopilot.com/mcp/",
+          "headers": {
+            "Authorization": "Bearer YOUR_GITHUB_TOKEN"
+          }
+        },
+        "EXAMPLE_stdio_server": {
+          "type": "stdio",
+          "command": "npx",
+          "args": ["-y", "some-mcp-server"],
+          "env": {
+            "API_KEY": "YOUR_API_KEY"
+          }
+        }
+      }
+    }
+  }
+}

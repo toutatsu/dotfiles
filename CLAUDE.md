@@ -31,6 +31,7 @@ config/
   claude/
     CLAUDE.md              → ~/.claude/CLAUDE.md
     settings.json          → ~/.claude/settings.json
+    claude.json.example    — ~/.claude.json のテンプレート (シンボリックリンク非対象)
     agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
       code-reviewer.md
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
@@ -101,6 +102,7 @@ Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`
 
 MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
 Reason: `~/.claude.json` contains API tokens alongside server URLs, so it must stay out of git.
+Template: `config/claude/claude.json.example`
 
 ### MCP Servers
 
@@ -113,6 +115,8 @@ claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 # 登録済みサーバー一覧
 claude mcp list
 ```
+
+Scopes: `--scope user`（全プロジェクト共通）、`--scope local`（現在プロジェクトのみ、デフォルト）
 
 ## DeepAgents CLI Setup
 

@@ -49,6 +49,40 @@ skipped=0
 linked=0
 restored=0
 
+process_dir() {
+  local source_dir_path="$1"
+  local target_dir_path="$2"
+
+  if [ "$install" = true ]; then
+    if [ -L "$target_dir_path" ]; then
+      echo "  ⏭️  スキップ       $target_dir_path"
+      echo "              シンボリックリンクが既に存在します"
+      (( skipped++ )) || true
+      return
+    fi
+    if [ -d "$target_dir_path" ] && [ ! -L "$target_dir_path" ]; then
+      echo "  📦 バックアップ   $target_dir_path"
+      echo "              → ${target_dir_path}.pre-dotfiles"
+      mv "$target_dir_path" "$target_dir_path.pre-dotfiles"
+    fi
+    ln -s "$source_dir_path" "$target_dir_path"
+    echo "  🔗 リンク作成     $target_dir_path"
+    echo "              → $source_dir_path"
+    (( linked++ )) || true
+  else
+    if [ -L "$target_dir_path" ]; then
+      rm "$target_dir_path"
+      echo "  🗑️  リンク削除     $target_dir_path"
+    fi
+    if [ -d "$target_dir_path.pre-dotfiles" ]; then
+      mv "$target_dir_path.pre-dotfiles" "$target_dir_path"
+      echo "  ♻️  リストア       ${target_dir_path}.pre-dotfiles"
+      echo "              → $target_dir_path"
+      (( restored++ )) || true
+    fi
+  fi
+}
+
 process_file() {
   local source_file="$1"
   local target_file="$2"
@@ -122,6 +156,18 @@ for entry in "${files[@]}"; do
   src_rel="${entry%%:*}"
   target_file="${entry##*:}"
   process_file "$source_dir/$src_rel" "$target_file"
+done
+
+# ディレクトリ単位でシンボリックリンクするエントリ
+dirs=(
+  "config/deepagents/agents:$HOME/.deepagents/agents"
+  "config/claude/skills:$HOME/.claude/skills"
+)
+
+for entry in "${dirs[@]}"; do
+  src_rel="${entry%%:*}"
+  target_dir_path="${entry##*:}"
+  process_dir "$source_dir/$src_rel" "$target_dir_path"
 done
 
 # フッター

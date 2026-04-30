@@ -33,6 +33,11 @@ config/
     settings.json          → ~/.claude/settings.json
     agents/
       code-reviewer.md     → ~/.claude/agents/code-reviewer.md
+    skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
+      commit/SKILL.md      — git コミット作成（manual invoke のみ）
+      pr/SKILL.md          — GitHub PR 作成（manual invoke のみ）
+      search-docs/SKILL.md — ライブラリドキュメント検索（自動起動あり）
+      _template/SKILL.md   — 新規スキル作成用テンプレート
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
     bash/ → .bash_profile, .bashrc
@@ -51,6 +56,11 @@ config/
     .mcp.json              → ~/.deepagents/.mcp.json
     .mcp.json.example      — .mcp.json の設定例テンプレート (シンボリックリンク非対象)
     .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
+    agents/                → ~/.deepagents/agents/ (ディレクトリごとシンボリックリンク)
+      researcher/AGENTS.md
+      code-writer/AGENTS.md
+      git-assistant/AGENTS.md
+      _template/AGENTS.md  — 新規サブエージェント作成用テンプレート
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/

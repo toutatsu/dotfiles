@@ -38,6 +38,13 @@ config/
       commit/SKILL.md      — git コミット作成（manual invoke のみ）
       pr/SKILL.md          — GitHub PR 作成（manual invoke のみ）
       search-docs/SKILL.md — ライブラリドキュメント検索（自動起動あり）
+      fix-issue/SKILL.md   — GitHub issue 番号指定で修正（manual invoke のみ）
+      explain-code/SKILL.md — アナロジーと ASCII 図でコードを説明（自動起動あり）
+      pr-review/           — PR diff を取得してコードレビュー（manual invoke / 自動起動あり）
+        SKILL.md           — スキル本体（context: fork + agent: code-reviewer）
+        template.md        — レビューコメントの記述テンプレート
+        examples/sample.md — 期待するレビュー出力のサンプル
+        scripts/validate.sh — PR 作成前の事前チェックスクリプト
       _template/SKILL.md   — 新規スキル作成用テンプレート
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc

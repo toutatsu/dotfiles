@@ -166,6 +166,7 @@ dirs=(
   "config/claude/skills:$HOME/.claude/skills"
   "config/opencode/agents:$HOME/.config/opencode/agents"
   "config/opencode/skills:$HOME/.config/opencode/skills"
+  "config/opencode/tools:$HOME/.config/opencode/tools"
 )
 
 for entry in "${dirs[@]}"; do

@@ -57,6 +57,11 @@ config/
       code-reviewer.md
     skills/                → ~/.config/opencode/skills/ (ディレクトリごとシンボリックリンク)
       _template/SKILL.md   — 新規スキル作成用テンプレート
+    tools/                 → ~/.config/opencode/tools/ (ディレクトリごとシンボリックリンク)
+      git_summary.ts       — git コミットログ取得ツール
+      file_stats.ts        — ファイル統計情報取得ツール
+      add.ts / add.py      — 2つの数値を足し算するツール（Python ラッパー）
+      word_count.ts / word_count.py — テキストの行数・単語数・文字数をカウントするツール（Python ラッパー）
   deepagents/
     config.toml            → ~/.deepagents/config.toml
     .mcp.json              → ~/.deepagents/.mcp.json

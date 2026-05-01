@@ -38,12 +38,30 @@
 
   // ツールのパーミッション設定
   // 値: "allow"（自動許可）/ "ask"（都度確認）/ "deny"（禁止）
+  // 公式ツール一覧: https://opencode.ai/docs/ja/tools/
   "permission": {
     // デフォルトは都度確認
     "*": "ask",
-    // ファイル読み取りは自動許可
+
+    // --- 読み取り系（自動許可）---
+    // ファイル内容の読み取り
     "read": "allow",
-    // bash コマンドはコマンド単位で制御
+    // パターンマッチングによるファイル検索
+    "glob": "allow",
+    // 正規表現によるファイル内テキスト検索
+    "grep": "allow",
+    // コードインテリジェンス機能（LSP）
+    "lsp": "allow",
+
+    // --- 書き込み系（都度確認）---
+    // ファイルの正確な文字列置換編集（write・patch も edit 権限で制御される）
+    "edit": "ask",
+    // 新規ファイル作成・既存ファイル上書き
+    "write": "ask",
+    // ファイルへのパッチ適用
+    "patch": "ask",
+
+    // --- 実行系（コマンド単位で制御）---
     "bash": {
       "*": "ask",
       "git *": "allow",
@@ -52,6 +70,28 @@
       "grep *": "allow",
       "find *": "allow"
     },
+
+    // --- エージェント・スキル系（都度確認）---
+    // SKILL.md ファイルの読み込みと実行
+    "skill": "ask",
+    // ユーザーへの質問
+    "question": "ask",
+    // Todo リスト管理
+    "todowrite": "ask",
+
+    // --- Web アクセス（都度確認）---
+    // URL からコンテンツ取得
+    "webfetch": "ask",
+    // Web 検索
+    "websearch": "ask",
+
+    // --- カスタムツール・MCP ツール（ワイルドカードで制御）---
+    // カスタムツールは .opencode/tools/ または ~/.config/opencode/tools/ に TypeScript で定義
+    // ツール名は <filename>_<exportname> 形式、MCP ツールは <servername>_<toolname> 形式
+    // 例: "mytool_*": "ask",
+    // 例: "mymcp_*": "ask",
+
+    // --- 機密ファイルの保護 ---
     // .env 系ファイルへのアクセスを禁止
     "read(*.env)": "deny",
     "read(*.env.*)": "deny",

@@ -20,7 +20,8 @@
       "WebFetch(domain:www.langchain.com)",
       "Bash(uv tool *)",
       "WebFetch(domain:vstorm-co.github.io)",
-      "WebFetch(domain:deepagentsdk.dev)"
+      "WebFetch(domain:deepagentsdk.dev)",
+      "Read(//home/toutatsu/.config/opencode/**)"
     ]
   }
 }

@@ -11,7 +11,19 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -n "$TERMUX_VERSION" ]; then
   # Termux: termux-services で管理される ssh-agent サービスのソケットを参照
   # 事前に: pkg install termux-services && sv-enable ssh-agent
-  export SSH_AUTH_SOCK="$PREFIX/tmp/ssh-agent.socket"
+  if [ -n "$XDG_RUNTIME_DIR" ]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+  else
+    export SSH_AUTH_SOCK="$PREFIX/var/run/ssh-agent.socket"
+  fi
+
+  ssh-add -l >/dev/null 2>&1
+  _ssh_status=$?
+  if [ $_ssh_status -eq 1 ]; then
+    # エージェントは動いているが鍵未登録
+    ssh-add
+  fi
+  unset _ssh_status
 else
   # 通常環境: 固定ソケットパスで ssh-agent を管理する
   export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"

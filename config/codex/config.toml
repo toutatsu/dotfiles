@@ -1,0 +1,136 @@
+# ~/.codex/config.toml
+# Codex CLI global configuration
+
+# デフォルトのモデル
+model = "o4-mini"
+
+# 承認ポリシー: "on-request" | "never" | "always"
+approval_policy = "on-request"
+
+# サンドボックスモード: "workspace-write" | "read-only" | "danger-full-access"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = false
+
+# ---------------------------------------------------------------------------
+# モデル挙動
+# ---------------------------------------------------------------------------
+
+# 推論努力レベル: "low" | "medium" | "high" | "xhigh" (モデルが対応している場合)
+# model_reasoning_effort = "medium"
+
+# ローカルモデル等でコンテキストウィンドウを手動指定する場合（トークン数）
+# model_context_window = 32768
+
+# コンテキストが逼迫したときに自動圧縮するトークン閾値
+# model_auto_compact_token_limit = 10000
+
+# ---------------------------------------------------------------------------
+# エージェントの出力表示
+# ---------------------------------------------------------------------------
+
+# 推論トレース（<think>タグ等）を非表示にする
+# hide_agent_reasoning = false
+
+# 推論トレースを生のままストリーム表示する（デバッグ用）
+# show_raw_agent_reasoning = false
+
+# ---------------------------------------------------------------------------
+# 履歴・セッション
+# ---------------------------------------------------------------------------
+
+# セッションをディスクに保存しない（一時セッション）
+# ephemeral = false
+
+[history]
+# 履歴をディスクに書き込まない場合は "none"、書き込む場合は "default"
+# persistence = "default"
+# 履歴ファイルの最大サイズ（バイト）
+# max_bytes = 10485760  # 10 MB
+
+# ---------------------------------------------------------------------------
+# TUI 通知
+# ---------------------------------------------------------------------------
+
+[tui]
+# ターン完了時にデスクトップ通知を送る外部コマンド（引数としてJSONが渡される）
+# notify = ["notify-send", "Codex"]
+
+[tui.notifications]
+# デスクトップ通知の有効化
+# notifications = true
+# 通知方式: "auto" | "osc9" | "osc777"
+# method = "auto"
+# 通知タイミング: "unfocused"（非フォーカス時のみ）| "always"
+# condition = "unfocused"
+
+# ---------------------------------------------------------------------------
+# カスタムプロバイダ
+# ---------------------------------------------------------------------------
+# wire_api は現在 "responses" のみサポート（OpenAI Responses API 互換エンドポイントが必要）
+# llama.cpp は --jinja フラグを付けて起動すると /v1/responses を提供する:
+#   llama-server --jinja -m <model.gguf> --port 8080
+#
+# 使用方法: codex -p llama
+# ---------------------------------------------------------------------------
+
+[model_providers.llama]
+name = "llama.cpp"
+base_url = "http://127.0.0.1:8080/v1"
+wire_api = "responses"
+
+[profiles.llama]
+model = "local"
+model_provider = "llama"
+
+# ---------------------------------------------------------------------------
+# Ollama（組み込みプロバイダ "ollama" の上書き例 / ポートを変更する場合）
+# デフォルトのまま使うなら設定不要。`codex -p ollama` で起動できる。
+# Ollama も Responses API 互換エンドポイントを提供する必要がある。
+# ---------------------------------------------------------------------------
+
+# [model_providers.ollama]
+# name = "ollama"
+# base_url = "http://127.0.0.1:11434/v1"
+# wire_api = "responses"
+#
+# [profiles.ollama]
+# model = "llama3.2"
+# model_provider = "ollama"
+
+# ---------------------------------------------------------------------------
+# LM Studio（組み込みプロバイダ "lmstudio" の上書き例）
+# デフォルトのまま使うなら設定不要。`codex -p lmstudio` で起動できる。
+# ---------------------------------------------------------------------------
+
+# [model_providers.lmstudio]
+# name = "LM Studio"
+# base_url = "http://127.0.0.1:1234/v1"
+# wire_api = "responses"
+#
+# [profiles.lmstudio]
+# model = "local-model"
+# model_provider = "lmstudio"
+
+# ---------------------------------------------------------------------------
+# MCPサーバー
+# ---------------------------------------------------------------------------
+# codex はプロジェクトの .codex/config.toml でも定義できるが、
+# グローバルに使うサーバーはここで定義しておくと便利。
+#
+# Stdio（ローカルプロセス）の例:
+# [mcp_servers.my-server]
+# command = "npx"
+# args = ["-y", "@my-org/mcp-server"]
+# env = { MY_TOKEN = "..." }          # 直接埋め込みは避け、env_vars を推奨
+# enabled = true
+# required = false                    # 起動失敗時にエラー終了させたくない場合
+# default_tools_approval_mode = "auto"  # "auto" | "manual"
+# enabled_tools = ["tool_a", "tool_b"] # 許可するツールを絞る場合
+#
+# StreamableHttp（リモートサーバー）の例:
+# [mcp_servers.github]
+# url = "https://api.githubcopilot.com/mcp/"
+# bearer_token_env_var = "GITHUB_PERSONAL_ACCESS_TOKEN"
+# enabled = true

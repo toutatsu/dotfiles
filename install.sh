@@ -42,6 +42,8 @@ files=(
   "config/deepagents/config.toml:$HOME/.deepagents/config.toml"
   "config/deepagents/.mcp.json:$HOME/.deepagents/.mcp.json"
   # "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"  # エラーが発生するため無効化
+  "config/codex/config.toml:$HOME/.codex/config.toml"
+  "config/codex/AGENTS.md:$HOME/.codex/AGENTS.md"
 )
 
 # ---
@@ -148,6 +150,7 @@ echo ""
 if [ "$install" = true ]; then
   mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.deepagents/agent"
+  mkdir -p "$HOME/.codex"
   mkdir -p "$HOME/.ssh/control"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
@@ -167,6 +170,7 @@ dirs=(
   "config/opencode/agents:$HOME/.config/opencode/agents"
   "config/opencode/skills:$HOME/.config/opencode/skills"
   "config/opencode/tools:$HOME/.config/opencode/tools"
+  "config/codex/skills:$HOME/.codex/skills"
 )
 
 for entry in "${dirs[@]}"; do

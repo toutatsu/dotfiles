@@ -82,6 +82,11 @@ config/
       _template/AGENTS.md  — 新規サブエージェント作成用テンプレート
     skills/                → ~/.deepagents/agent/skills/ (ディレクトリごとシンボリックリンク)
       _template/SKILL.md   — 新規スキル作成用テンプレート
+  codex/
+    config.toml            → ~/.codex/config.toml
+    AGENTS.md              → ~/.codex/AGENTS.md
+    skills/                → ~/.codex/skills/ (ディレクトリごとシンボリックリンク)
+      _template/SKILL.md   — 新規スキル作成用テンプレート
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/

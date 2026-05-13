@@ -1,76 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-
-
+  "cleanupPeriodDays": 30,
+  "skillListingMaxDescChars": 512,
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-haiku-4-5-20251001"
   },
-
-  "language": "japanese",
-  "model": "sonnet",
-  "effortLevel": "medium",
-
-
-  "theme": "auto",
-  "editorMode": "vim",
-  "tui": "fullscreen",
-  "defaultView": "chat",
-  "verbose": false,
-  "showTurnDuration": true,
-  "showMessageTimestamps": true,
-  "prefersReducedMotion": false,
-  "promptSuggestionEnabled": true,
-
-
-  "autoCompactEnabled": true,
-  "autoCompactWindow": 100000,
-  "alwaysThinkingEnabled": false,
-  "showThinkingSummaries": false,
-  "skillListingMaxDescChars": 512,
-  "cleanupPeriodDays": 30,
   "includeGitInstructions": true,
-
-
-  "fileCheckpointingEnabled": true,
-  "todoFeatureEnabled": true,
-
-
-  "preferredNotifChannel": "terminal_bell",
-  "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true,
-
-
   "permissions": {
     "allow": [
       "Bash(git *)",
       "Bash(make *)"
     ]
   },
-
-
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "notify-send 'Claude Code' '入力待ちです' --urgency=normal 2>/dev/null || true"
-          }
-        ]
-      }
-    ]
-  },
-
-
-  "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true
-  },
-
-
+  "model": "sonnet",
   "skillOverrides": {
     "update-config": "on",
     "keybindings-help": "on",
@@ -79,7 +21,6 @@
     "loop": "on",
     "schedule": "on",
     "claude-api": "on",
-
     "superpowers:using-superpowers": "on",
     "superpowers:brainstorm": "on",
     "superpowers:brainstorming": "on",
@@ -97,12 +38,59 @@
     "superpowers:verification-before-completion": "on",
     "superpowers:requesting-code-review": "on",
     "superpowers:receiving-code-review": "on",
-
     "code-review:code-review": "on",
     "frontend-design:frontend-design": "on",
-
     "init": "on",
     "review": "on",
     "security-review": "on"
-  }
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' '入力待ちです' --urgency=normal 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true
+  },
+  "language": "japanese",
+  "alwaysThinkingEnabled": false,
+  "effortLevel": "medium",
+  "autoCompactWindow": 100000,
+  "promptSuggestionEnabled": true,
+  "tui": "fullscreen",
+  "prefersReducedMotion": false,
+  "showThinkingSummaries": false,
+  "theme": "auto",
+  "editorMode": "vim",
+  "verbose": false,
+  "preferredNotifChannel": "terminal_bell",
+  "autoCompactEnabled": true,
+  "fileCheckpointingEnabled": true,
+  "showTurnDuration": true,
+  "showMessageTimestamps": true,
+  "todoFeatureEnabled": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "defaultView": "chat"
 }

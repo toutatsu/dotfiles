@@ -53,17 +53,13 @@ network_access = false
 # TUI 通知
 # ---------------------------------------------------------------------------
 
-[tui]
-# ターン完了時にデスクトップ通知を送る外部コマンド（引数としてJSONが渡される）
-# notify = ["notify-send", "Codex"]
-
-[tui.notifications]
+[tui.notification_settings]
 # デスクトップ通知の有効化
 # notifications = true
 # 通知方式: "auto" | "osc9" | "osc777"
-# method = "auto"
+# notification_method = "auto"
 # 通知タイミング: "unfocused"（非フォーカス時のみ）| "always"
-# condition = "unfocused"
+# notification_condition = "unfocused"
 
 # ---------------------------------------------------------------------------
 # カスタムプロバイダ

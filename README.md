@@ -20,6 +20,20 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 After installing oh-my-zsh, re-run `make` to deploy `mytheme.zsh-theme`.
 
+### Environment Variables
+
+API keys and tokens are not version-controlled. Copy the example files and fill in your values:
+
+```bash
+# 共通設定
+cp .env.example ~/.env
+
+# サービス固有
+cp config/deepagents/.env.example ~/.deepagents/.env
+cp config/codex/.env.example ~/.codex/.env
+cp config/opencode/.env.example ~/.config/opencode/.env
+```
+
 ## Uninstall
 
 ```bash

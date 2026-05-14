@@ -32,6 +32,7 @@ config/
     CLAUDE.md              → ~/.claude/CLAUDE.md
     settings.json          → ~/.claude/settings.json
     claude.json.example    — ~/.claude.json のテンプレート (シンボリックリンク非対象)
+    .env.example           — Claude Code 用 MCP トークン設定テンプレート (シンボリックリンク非対象)
     agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
       code-reviewer.md
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
@@ -58,6 +59,7 @@ config/
     .editorconfig          → ~/.editorconfig
   opencode/
     opencode.jsonc         → ~/.config/opencode/opencode.jsonc
+    .env.example           — opencode 用 API キー設定テンプレート (シンボリックリンク非対象)
     tui.json               → ~/.config/opencode/tui.json
     AGENTS.md              → ~/.config/opencode/AGENTS.md
     agents/                → ~/.config/opencode/agents/ (ディレクトリごとシンボリックリンク)
@@ -84,6 +86,7 @@ config/
       _template/SKILL.md   — 新規スキル作成用テンプレート
   codex/
     config.toml            → ~/.codex/config.toml
+    .env.example           — Codex CLI 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.codex/AGENTS.md
     skills/                → ~/.codex/skills/ (ディレクトリごとシンボリックリンク)
       _template/SKILL.md   — 新規スキル作成用テンプレート

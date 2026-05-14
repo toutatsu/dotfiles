@@ -27,6 +27,9 @@
         loggraph = log --graph --all --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
         tree = log --graph --pretty=format:'%x09%C(auto) %h %Cgreen %ar %Creset%x09by"%C(cyan ul)%an%Creset" %x09%C(auto)%s %d'
         stash-list = stash list --pretty=format:'%gd: %C(yellow)%h%Creset %s'
-        alias = config --get-regexp ^alias
+        p      = pull
+        unstage = restore --staged
+        undo   = reset HEAD~1
+        alias  = config --get-regexp ^alias
 [ui]
         color = true

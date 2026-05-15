@@ -90,6 +90,11 @@ config/
     AGENTS.md              → ~/.codex/AGENTS.md
     skills/                → ~/.codex/skills/ (ディレクトリごとシンボリックリンク)
       _template/SKILL.md   — 新規スキル作成用テンプレート
+  hermes/
+    config.yaml            → ~/.hermes/config.yaml
+    SOUL.md                → ~/.hermes/SOUL.md (エージェント個性・口調の定義、全メッセージに注入される)
+    .env.example           — Hermes Agent 用 API キー設定テンプレート (シンボリックリンク非対象)
+    AGENTS.md              → ~/.hermes/AGENTS.md
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
@@ -155,6 +160,23 @@ cp config/deepagents/.env.example ~/.deepagents/.env
 ```
 
 ローカルの llama.cpp API を使う場合は `llama-server` をポート 8080 で起動しておく。
+
+## Hermes Agent Setup
+
+`config/hermes/config.yaml` は `~/.hermes/config.yaml` にシンボリックリンクされる。
+`~/.hermes/.env`（APIキー）は git 管理外。テンプレートから作成する:
+
+```bash
+pip install hermes-agent  # または pipx install hermes-agent
+cp config/hermes/.env.example ~/.hermes/.env
+# ~/.hermes/.env にAPIキーを設定
+```
+
+モデルやターミナルバックエンドの変更:
+```bash
+hermes config set model anthropic/claude-sonnet-4-6
+hermes config set terminal.backend local
+```
 
 ## OpenClaw Setup
 

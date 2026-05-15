@@ -44,6 +44,9 @@ files=(
   # "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"  # エラーが発生するため無効化
   "config/codex/config.toml:$HOME/.codex/config.toml"
   "config/codex/AGENTS.md:$HOME/.codex/AGENTS.md"
+  "config/hermes/config.yaml:$HOME/.hermes/config.yaml"
+  "config/hermes/AGENTS.md:$HOME/.hermes/AGENTS.md"
+  "config/hermes/SOUL.md:$HOME/.hermes/SOUL.md"
 )
 
 # ---
@@ -151,6 +154,7 @@ if [ "$install" = true ]; then
   mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.deepagents/agent"
   mkdir -p "$HOME/.codex"
+  mkdir -p "$HOME/.hermes"
   mkdir -p "$HOME/.ssh/control"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi

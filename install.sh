@@ -156,6 +156,8 @@ if [ "$install" = true ]; then
   mkdir -p "$HOME/.codex"
   mkdir -p "$HOME/.hermes"
   mkdir -p "$HOME/.ssh/control"
+  mkdir -p "$HOME/.local/bin"
+  mkdir -p "$HOME/.local/share/dotfiles"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
 
@@ -175,6 +177,8 @@ dirs=(
   "config/opencode/skills:$HOME/.config/opencode/skills"
   "config/opencode/tools:$HOME/.config/opencode/tools"
   "config/codex/skills:$HOME/.codex/skills"
+  "config/shell/bin:$HOME/.local/bin"
+  "config/shell/functions:$HOME/.local/share/dotfiles/functions"
 )
 
 for entry in "${dirs[@]}"; do

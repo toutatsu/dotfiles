@@ -49,6 +49,8 @@ config/
       _template/SKILL.md   — 新規スキル作成用テンプレート
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
+    bin/      → ~/.local/bin (ディレクトリごとシンボリックリンク)
+    functions/ → ~/.local/share/dotfiles/functions (source 専用、.profile が自動読み込み)
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme
   tmux/   → .tmux.conf

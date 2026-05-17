@@ -157,7 +157,7 @@ if [ "$install" = true ]; then
   mkdir -p "$HOME/.hermes"
   mkdir -p "$HOME/.ssh/control"
   mkdir -p "$HOME/.local/bin"
-  mkdir -p "$HOME/.local/share/dotfiles"
+  mkdir -p "$HOME/.local/share/dotfiles/functions"
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
 
@@ -177,14 +177,27 @@ dirs=(
   "config/opencode/skills:$HOME/.config/opencode/skills"
   "config/opencode/tools:$HOME/.config/opencode/tools"
   "config/codex/skills:$HOME/.codex/skills"
-  "config/shell/bin:$HOME/.local/bin"
-  "config/shell/functions:$HOME/.local/share/dotfiles/functions"
 )
 
 for entry in "${dirs[@]}"; do
   src_rel="${entry%%:*}"
   target_dir_path="${entry##*:}"
   process_dir "$source_dir/$src_rel" "$target_dir_path"
+done
+
+# ファイル単位でシンボリックリンクするディレクトリ（既存ファイルを上書きしない）
+file_spread_dirs=(
+  "config/shell/bin:$HOME/.local/bin"
+  "config/shell/functions:$HOME/.local/share/dotfiles/functions"
+)
+
+for entry in "${file_spread_dirs[@]}"; do
+  src_rel="${entry%%:*}"
+  target_dir="${entry##*:}"
+  for src_file in "$source_dir/$src_rel/"*; do
+    [ -f "$src_file" ] || continue
+    process_file "$src_file" "$target_dir/$(basename "$src_file")"
+  done
 done
 
 # フッター

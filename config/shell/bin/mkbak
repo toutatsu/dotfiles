@@ -10,5 +10,7 @@ for f in "$@"; do
     echo "ファイルが見つかりません: $f" >&2
     exit 1
   fi
+done
+for f in "$@"; do
   cp -i "$f" "${f}.bak" && echo "backup created: ${f}.bak"
 done

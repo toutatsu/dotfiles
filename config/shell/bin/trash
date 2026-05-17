@@ -6,4 +6,12 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 mkdir -p "$HOME/.Trash"
-mv -i "$@" "$HOME/.Trash" && echo "moved to ~/.Trash: $*"
+failed=0
+for f in "$@"; do
+  if mv -i "$f" "$HOME/.Trash"; then
+    echo "moved to ~/.Trash: $f"
+  else
+    failed=$((failed + 1))
+  fi
+done
+[ "$failed" -eq 0 ] || exit 1

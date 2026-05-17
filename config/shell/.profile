@@ -47,8 +47,9 @@ else
 fi
 
 
-trash(){
-  mv -i $@ ~/.Trash && echo "\`$@\` is moved to ~/.Trash"
-}
 
-# alias rm=trash
+# source all shell function files
+for __f in "$HOME/.local/share/dotfiles/functions/"*.sh; do
+  [ -f "$__f" ] && . "$__f"
+done
+unset __f

@@ -1,0 +1,9 @@
+#!/bin/bash
+# ファイルを ~/.Trash に移動する（rm の代替）
+set -euo pipefail
+if [ $# -eq 0 ]; then
+  echo "使い方: trash <file>..." >&2
+  exit 1
+fi
+mkdir -p "$HOME/.Trash"
+mv -i "$@" "$HOME/.Trash" && echo "moved to ~/.Trash: $*"

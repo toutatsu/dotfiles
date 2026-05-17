@@ -1,0 +1,14 @@
+#!/bin/bash
+# ファイルに .bak を付けてコピーする
+set -euo pipefail
+if [ $# -eq 0 ]; then
+  echo "使い方: mkbak <file>..." >&2
+  exit 1
+fi
+for f in "$@"; do
+  if [ ! -e "$f" ]; then
+    echo "ファイルが見つかりません: $f" >&2
+    exit 1
+  fi
+  cp -i "$f" "${f}.bak" && echo "backup created: ${f}.bak"
+done

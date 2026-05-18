@@ -1,341 +1,444 @@
-# ~/.hermes/config.yaml
-# Hermes Agent 設定ファイル
-# 参考: https://github.com/nousresearch/hermes-agent
-
-# ---------------------------------------------------------------------------
-# モデル設定
-# ---------------------------------------------------------------------------
 model:
-  # デフォルトモデル
-  # hermes config set model <provider>/<model> で変更可
-  default: anthropic/claude-sonnet-4-6
-  provider: anthropic
-
-# ---------------------------------------------------------------------------
-# カスタムプロバイダ
-# ---------------------------------------------------------------------------
-# OpenAI 互換 API を提供するローカルサーバーやサードパーティを追加する場合
-# 使用方法: hermes config set model.provider custom:<name>
-
-# custom_providers:
-#   - name: ollama
-#     base_url: http://127.0.0.1:11434/v1
-#     api_mode: chat_completions
-#
-#   - name: llama
-#     base_url: http://127.0.0.1:8080/v1
-#     api_mode: chat_completions
-
-# ---------------------------------------------------------------------------
-# ツールセット
-# ---------------------------------------------------------------------------
-# toolsets:
-#   - hermes-cli      # デフォルト。ファイル・シェル・Web ツール一式
-#   - computer        # コンピュータ操作ツール（実験的）
-
-# ---------------------------------------------------------------------------
-# エージェント動作
-# ---------------------------------------------------------------------------
+  default: gemma4:31b
+  provider: ollama-cloud
+  base_url: https://ollama.com/v1
+providers: {}
+fallback_providers: []
+credential_pool_strategies: {}
+toolsets:
+- hermes-cli
 agent:
-  max_turns: 100       # ツール呼び出しの上限（暴走防止）
-  # reasoning_effort: "medium"  # low | medium | high（対応モデルのみ）
-  # verbose: false
-  # tool_use_enforcement: auto   # auto | strict | disabled
-  # image_input_mode: auto       # auto | always | never
-
-# ---------------------------------------------------------------------------
-# ターミナル / サンドボックス
-# ---------------------------------------------------------------------------
+  max_turns: 90
+  gateway_timeout: 1800
+  restart_drain_timeout: 180
+  api_max_retries: 3
+  service_tier: ''
+  tool_use_enforcement: auto
+  gateway_timeout_warning: 900
+  clarify_timeout: 600
+  gateway_notify_interval: 180
+  gateway_auto_continue_freshness: 3600
+  image_input_mode: auto
+  disabled_toolsets: []
 terminal:
-  # "local" | "docker" | "ssh" | "modal" | "daytona" | "vercel_sandbox" | "singularity" | "disabled"
   backend: local
-  # timeout: 120           # コマンドタイムアウト秒数
-  # cwd: "~"               # デフォルト作業ディレクトリ
-  # file_sync_max_mb: 10   # Docker バックエンド使用時のファイル同期上限 (MB)
-
-  # Docker バックエンド設定例
-  # backend: docker
-  # docker_image: "nikolaik/python-nodejs:python3.11-nodejs20"
-  # container_memory: 5120   # MB
-  # docker_volumes:
-  #   - "/home/user/projects:/workspace/projects"
-
-# ---------------------------------------------------------------------------
-# セッション自動リセット
-# ---------------------------------------------------------------------------
-# session_reset:
-#   mode: "idle"         # "idle" = 非アクティブ後に新規セッション開始
-#   idle_minutes: 60
-
-# ---------------------------------------------------------------------------
-# コンテキスト圧縮
-# ---------------------------------------------------------------------------
+  modal_mode: auto
+  cwd: .
+  timeout: 180
+  env_passthrough: []
+  shell_init_files: []
+  auto_source_bashrc: true
+  docker_image: nikolaik/python-nodejs:python3.11-nodejs20
+  docker_forward_env: []
+  docker_env: {}
+  singularity_image: docker://nikolaik/python-nodejs:python3.11-nodejs20
+  modal_image: nikolaik/python-nodejs:python3.11-nodejs20
+  daytona_image: nikolaik/python-nodejs:python3.11-nodejs20
+  vercel_runtime: node24
+  container_cpu: 1
+  container_memory: 5120
+  container_disk: 51200
+  container_persistent: true
+  docker_volumes: []
+  docker_mount_cwd_to_workspace: false
+  docker_extra_args: []
+  docker_run_as_host_user: false
+  persistent_shell: true
+web:
+  backend: ''
+  search_backend: ''
+  extract_backend: ''
+browser:
+  inactivity_timeout: 120
+  command_timeout: 30
+  record_sessions: false
+  allow_private_urls: false
+  engine: auto
+  auto_local_for_private_urls: true
+  cdp_url: ''
+  dialog_policy: must_respond
+  dialog_timeout_s: 300
+  camofox:
+    managed_persistence: false
+    user_id: ''
+    session_key: ''
+    adopt_existing_tab: false
+checkpoints:
+  enabled: false
+  max_snapshots: 20
+  max_total_size_mb: 500
+  max_file_size_mb: 10
+  auto_prune: true
+  retention_days: 7
+  delete_orphans: true
+  min_interval_hours: 24
+file_read_max_chars: 100000
+tool_output:
+  max_bytes: 50000
+  max_lines: 2000
+  max_line_length: 2000
+tool_loop_guardrails:
+  warnings_enabled: true
+  hard_stop_enabled: false
+  warn_after:
+    exact_failure: 2
+    same_tool_failure: 3
+    idempotent_no_progress: 2
+  hard_stop_after:
+    exact_failure: 5
+    same_tool_failure: 8
+    idempotent_no_progress: 5
 compression:
   enabled: true
-  threshold: 0.50      # コンテキスト使用率がこの値を超えたら圧縮
-  # target_ratio: 0.20  # 圧縮後に保持する最新メッセージ比率
-  # protect_last_n: 20  # 圧縮対象外にする最新メッセージ数
-
-# ---------------------------------------------------------------------------
-# メモリ
-# ---------------------------------------------------------------------------
-# Hermes の主要機能。セッションをまたいだ記憶と学習を制御する。
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_last_n: 20
+  hygiene_hard_message_limit: 400
+  protect_first_n: 3
+prompt_caching:
+  cache_ttl: 5m
+openrouter:
+  response_cache: true
+  response_cache_ttl: 300
+  min_coding_score: 0.65
+bedrock:
+  region: ''
+  discovery:
+    enabled: true
+    provider_filter: []
+    refresh_interval: 3600
+  guardrail:
+    guardrail_identifier: ''
+    guardrail_version: ''
+    stream_processing_mode: async
+    trace: disabled
+auxiliary:
+  vision:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 120
+    extra_body: {}
+    download_timeout: 30
+  web_extract:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 360
+    extra_body: {}
+  compression:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 120
+    extra_body: {}
+  session_search:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 30
+    extra_body: {}
+    max_concurrency: 3
+  skills_hub:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 30
+    extra_body: {}
+  approval:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 30
+    extra_body: {}
+  mcp:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 30
+    extra_body: {}
+  title_generation:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 30
+    extra_body: {}
+  triage_specifier:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 120
+    extra_body: {}
+  curator:
+    provider: auto
+    model: ''
+    base_url: ''
+    api_key: ''
+    timeout: 600
+    extra_body: {}
+display:
+  compact: false
+  personality: kawaii
+  resume_display: full
+  busy_input_mode: interrupt
+  tui_auto_resume_recent: false
+  bell_on_complete: false
+  show_reasoning: false
+  streaming: true
+  timestamps: false
+  final_response_markdown: strip
+  persistent_output: true
+  persistent_output_max_lines: 200
+  inline_diffs: true
+  file_mutation_verifier: true
+  show_cost: false
+  skin: default
+  language: en
+  tui_status_indicator: kaomoji
+  user_message_preview:
+    first_lines: 2
+    last_lines: 2
+  interim_assistant_messages: true
+  tool_progress_command: false
+  tool_progress_overrides: {}
+  tool_preview_length: 0
+  ephemeral_system_ttl: 0
+  platforms: {}
+  runtime_footer:
+    enabled: false
+    fields:
+    - model
+    - context_pct
+    - cwd
+  copy_shortcut: auto
+  tool_progress: all
+dashboard:
+  theme: default
+  show_token_analytics: false
+privacy:
+  redact_pii: false
+tts:
+  provider: edge
+  edge:
+    voice: en-US-AriaNeural
+  elevenlabs:
+    voice_id: pNInz6obpgDQGcFmaJgB
+    model_id: eleven_multilingual_v2
+  openai:
+    model: gpt-4o-mini-tts
+    voice: alloy
+  xai:
+    voice_id: eve
+    language: en
+    sample_rate: 24000
+    bit_rate: 128000
+  mistral:
+    model: voxtral-mini-tts-2603
+    voice_id: c69964a6-ab8b-4f8a-9465-ec0925096ec8
+  neutts:
+    ref_audio: ''
+    ref_text: ''
+    model: neuphonic/neutts-air-q4-gguf
+    device: cpu
+  piper:
+    voice: en_US-lessac-medium
+stt:
+  enabled: true
+  provider: local
+  local:
+    model: base
+    language: ''
+  openai:
+    model: whisper-1
+  mistral:
+    model: voxtral-mini-latest
+voice:
+  record_key: ctrl+b
+  max_recording_seconds: 120
+  auto_tts: false
+  beep_enabled: true
+  silence_threshold: 200
+  silence_duration: 3.0
+human_delay:
+  mode: 'off'
+  min_ms: 800
+  max_ms: 2500
+context:
+  engine: compressor
 memory:
   memory_enabled: true
   user_profile_enabled: true
-  memory_char_limit: 2200   # ~800 tokens
-  user_char_limit: 1375     # ~500 tokens
-  # provider: openviking  # honcho | mem0 | hindsight | holographic | retaindb | byterover | supermemory
-  # BRV_API_KEY 等プロバイダ固有のキーは ~/.hermes/.env に設定する
-
-# ---------------------------------------------------------------------------
-# 表示設定
-# ---------------------------------------------------------------------------
-display:
-  tool_progress: all     # off | new | all | verbose
-  streaming: true        # トークンのリアルタイム表示
-  show_cost: false       # 推定コスト表示
-  # show_reasoning: false       # 推論過程の表示
-  # runtime_footer: true        # ターン終了時にモデル・コスト・トークン数を表示
-  # file_mutation_verifier: true  # ファイル変更後に内容を検証
-
-# ---------------------------------------------------------------------------
-# ツール出力制限
-# ---------------------------------------------------------------------------
-# tool_output:
-#   max_bytes: 50000       # ターミナル出力の上限バイト数
-#   max_lines: 2000        # ファイル読み取りのページネーション行数
-#   max_line_length: 2000  # 1行の最大文字数
-
-# ---------------------------------------------------------------------------
-# ツールループ暴走防止
-# ---------------------------------------------------------------------------
-# tool_loop_guardrails:
-#   warnings_enabled: true
-#   hard_stop_enabled: false
-#   warn_after:
-#     exact_failure: 2          # 同一ツール・同一引数の連続失敗
-#     same_tool_failure: 3      # 同一ツールの連続失敗
-#     idempotent_no_progress: 2 # 冪等ツールで進捗なし
-#   hard_stop_after:
-#     exact_failure: 5
-#     same_tool_failure: 8
-#     idempotent_no_progress: 5
-
-# ---------------------------------------------------------------------------
-# プロンプトキャッシュ
-# ---------------------------------------------------------------------------
-# prompt_caching:
-#   cache_ttl: 5m              # キャッシュ有効期間（5分 or 1時間）
-
-# ---------------------------------------------------------------------------
-# スキル設定
-# ---------------------------------------------------------------------------
-# skills:
-#   external_dirs: []          # 外部スキルディレクトリ（絶対パス）
-#   template_vars: true        # スキル内の {{変数}} 展開を有効化
-#   inline_shell: false        # スキル内シェルスクリプト実行（セキュリティ注意）
-#   guard_agent_created: false # エージェントが作成したスキルを保護
-
-# ---------------------------------------------------------------------------
-# スキルキュレーター（定期的な整理・アーカイブ）
-# ---------------------------------------------------------------------------
-# curator:
-#   enabled: true
-#   interval_hours: 168        # 実行間隔（デフォルト: 1週間）
-#   min_idle_hours: 2          # 最終使用からの最小経過時間
-#   stale_after_days: 30       # 古いと判定する日数
-#   archive_after_days: 90     # アーカイブする日数
-#   backup:
-#     enabled: true
-#     keep: 5                  # バックアップ保持数
-
-# ---------------------------------------------------------------------------
-# 目標モード（goals）
-# ---------------------------------------------------------------------------
-# goals:
-#   max_turns: 20              # 目標達成モードのターン上限
-
-# ---------------------------------------------------------------------------
-# セキュリティ
-# ---------------------------------------------------------------------------
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  provider: ''
+delegation:
+  model: ''
+  provider: ''
+  base_url: ''
+  api_key: ''
+  api_mode: ''
+  inherit_mcp_toolsets: true
+  max_iterations: 50
+  child_timeout_seconds: 600
+  reasoning_effort: ''
+  max_concurrent_children: 3
+  max_spawn_depth: 1
+  orchestrator_enabled: true
+  subagent_auto_approve: false
+prefill_messages_file: ''
+goals:
+  max_turns: 20
+skills:
+  external_dirs: []
+  template_vars: true
+  inline_shell: false
+  inline_shell_timeout: 10
+  guard_agent_created: false
+curator:
+  enabled: true
+  interval_hours: 168
+  min_idle_hours: 2
+  stale_after_days: 30
+  archive_after_days: 90
+  backup:
+    enabled: true
+    keep: 5
+honcho: {}
+timezone: ''
+slack:
+  require_mention: true
+  free_response_channels: ''
+  allowed_channels: ''
+  channel_prompts: {}
+discord:
+  require_mention: true
+  free_response_channels: ''
+  allowed_channels: ''
+  auto_thread: true
+  thread_require_mention: false
+  history_backfill: true
+  history_backfill_limit: 50
+  reactions: true
+  channel_prompts: {}
+  dm_role_auth_guild: ''
+  server_actions: ''
+  allow_any_attachment: false
+  max_attachment_bytes: 33554432
+whatsapp: {}
+telegram:
+  reactions: false
+  channel_prompts: {}
+  allowed_chats: ''
+mattermost:
+  require_mention: true
+  free_response_channels: ''
+  allowed_channels: ''
+  channel_prompts: {}
+matrix:
+  require_mention: true
+  free_response_rooms: ''
+  allowed_rooms: ''
+approvals:
+  mode: manual
+  timeout: 60
+  cron_mode: deny
+  mcp_reload_confirm: true
+  destructive_slash_confirm: true
+command_allowlist: []
+quick_commands: {}
+hooks: {}
+hooks_auto_accept: false
+personalities: {}
 security:
-  redact_secrets: true   # APIキーパターンをログからマスク
-  # tirith_enabled: true   # 実行前セキュリティスキャン
-  # privacy:
-  #   redact_pii: true     # 個人情報をログからマスク
+  allow_private_urls: false
+  redact_secrets: true
+  tirith_enabled: true
+  tirith_path: tirith
+  tirith_timeout: 5
+  tirith_fail_open: true
+  website_blocklist:
+    enabled: false
+    domains: []
+    shared_files: []
+  acked_advisories: []
+  allow_lazy_installs: true
+cron:
+  wrap_response: true
+  max_parallel_jobs: null
+kanban:
+  dispatch_in_gateway: true
+  dispatch_interval_seconds: 60
+  failure_limit: 2
+code_execution:
+  mode: project
+logging:
+  level: INFO
+  max_size_mb: 5
+  backup_count: 3
+  memory_monitor:
+    enabled: true
+    interval_seconds: 300
+model_catalog:
+  enabled: true
+  url: https://hermes-agent.nousresearch.com/docs/api/model-catalog.json
+  ttl_hours: 24
+  providers: {}
+network:
+  force_ipv4: false
+sessions:
+  auto_prune: false
+  retention_days: 90
+  vacuum_after_prune: true
+  min_interval_hours: 24
+onboarding:
+  seen:
+    openclaw_residue_cleanup: true
+updates:
+  pre_update_backup: false
+  backup_keep: 5
+lsp:
+  enabled: true
+  wait_mode: document
+  wait_timeout: 5.0
+  install_strategy: auto
+  servers: {}
+x_search:
+  model: grok-4.20-reasoning
+  timeout_seconds: 180
+  retries: 2
+_config_version: 23
+session_reset:
+  mode: both
+  idle_minutes: 1440
+  at_hour: 4
 
-# ---------------------------------------------------------------------------
-# 承認モード（危険なコマンドの処理方法）
-# ---------------------------------------------------------------------------
-# approvals:
-#   mode: "ask"          # "ask" | "auto" | "skip"（本番環境では "ask" 推奨）
-
-# ---------------------------------------------------------------------------
-# タイムゾーン
-# ---------------------------------------------------------------------------
-# timezone: "Asia/Tokyo"
-
-# ---------------------------------------------------------------------------
-# ファイル読み取り上限
-# ---------------------------------------------------------------------------
-# file_read_max_chars: 100000   # 1ファイルあたりの最大文字数
-
-# ---------------------------------------------------------------------------
-# コード実行モード
-# ---------------------------------------------------------------------------
-# code_execution:
-#   mode: "sandbox"      # "sandbox" | "local" | "disabled"
-
-# ---------------------------------------------------------------------------
-# チェックポイント（ファイルシステムスナップショット）
-# ---------------------------------------------------------------------------
-# checkpoints:
-#   enabled: false       # ファイル変更前にスナップショットを取得
-
-# ---------------------------------------------------------------------------
-# Webバックエンド（検索エンジン選択）
-# ---------------------------------------------------------------------------
-# web:
-#   backend: "auto"      # "auto" | "brave" | "serper" | "tavily" | "duckduckgo"
-#   # BRAVE_API_KEY, SERPER_API_KEY, TAVILY_API_KEY 等を .env に設定
-
-# ---------------------------------------------------------------------------
-# ブラウザ自動化
-# ---------------------------------------------------------------------------
-# browser:
-#   backend: "auto"      # "auto" | "playwright" | "puppeteer" | "disabled"
-
-# ---------------------------------------------------------------------------
-# TTS（音声合成）
-# ---------------------------------------------------------------------------
-# tts:
-#   provider: "auto"     # "auto" | "elevenlabs" | "openai" | "disabled"
-#   # voice: "Rachel"    # ElevenLabs ボイスID / OpenAI ボイス名
-
-# ---------------------------------------------------------------------------
-# STT（音声認識）
-# ---------------------------------------------------------------------------
-# stt:
-#   backend: "auto"      # "auto" | "openai" | "disabled"
-
-# ---------------------------------------------------------------------------
-# 音声モード（CLIマイクモード）
-# ---------------------------------------------------------------------------
-# voice:
-#   enabled: false       # --voice フラグで起動するマイク入力モード
-
-# ---------------------------------------------------------------------------
-# クイックコマンド（カスタムスラッシュコマンド）
-# ---------------------------------------------------------------------------
-# quick_commands:
-#   - name: "review"
-#     description: "コードレビューを実行"
-#     prompt: "このコードをレビューして、問題点を日本語で指摘してください"
-#   - name: "commit"
-#     description: "git コミットメッセージを生成"
-#     prompt: "git diff を確認して、適切なコミットメッセージを提案してください"
-
-# ---------------------------------------------------------------------------
-# Gitワークツリー（変更の分離）
-# ---------------------------------------------------------------------------
-# worktree:
-#   enabled: false       # 変更を一時 worktree に分離して安全に適用
-
-# ---------------------------------------------------------------------------
-# コンテキストエンジン（圧縮プラグイン）
-# ---------------------------------------------------------------------------
-# context:
-#   engine: "default"    # "default" | カスタムプラグイン名
-
-# ---------------------------------------------------------------------------
-# APIキーローテーション
-# ---------------------------------------------------------------------------
-# credential_pool_strategies:
-#   - provider: anthropic
-#     keys:
-#       - ${ANTHROPIC_API_KEY_1}
-#       - ${ANTHROPIC_API_KEY_2}
-#     strategy: "round_robin"   # "round_robin" | "fallback"
-
-# ---------------------------------------------------------------------------
-# 補助モデル（ビジョン・Web抽出・圧縮・セッション検索など）
-# ---------------------------------------------------------------------------
-# メインモデルが対応していない処理を委譲する。未設定時は auto で解決される。
-# 環境変数参照: api_key: ${GOOGLE_API_KEY}
-
-# auxiliary:
-#   vision:
-#     provider: auto
-#     model: ""              # e.g. "google/gemini-2.5-flash"
-#     timeout: 120           # 画像ダウンロード込みで余裕を持たせる
-#     download_timeout: 30
+# ── Fallback Model ────────────────────────────────────────────────────
+# Automatic provider failover when primary is unavailable.
+# Uncomment and configure to enable. Triggers on rate limits (429),
+# overload (529), service errors (503), or connection failures.
 #
-#   web_extract:
-#     provider: auto
-#     model: ""
-#     timeout: 360           # Webページ要約は時間がかかる
+# Supported providers:
+#   openrouter   (OPENROUTER_API_KEY)  — routes to any model
+#   openai-codex (OAuth — hermes auth) — OpenAI Codex
+#   nous         (OAuth — hermes auth) — Nous Portal
+#   zai          (ZAI_API_KEY)         — Z.AI / GLM
+#   kimi-coding  (KIMI_API_KEY)        — Kimi / Moonshot
+#   kimi-coding-cn (KIMI_CN_API_KEY)   — Kimi / Moonshot (China)
+#   minimax      (MINIMAX_API_KEY)     — MiniMax
+#   minimax-cn   (MINIMAX_CN_API_KEY)  — MiniMax (China)
+#   bedrock      (AWS IAM / boto3)     — AWS Bedrock (Converse API)
 #
-#   compression:
-#     timeout: 120           # 長い会話の圧縮
+# For custom OpenAI-compatible endpoints, add base_url and key_env.
 #
-#   session_search:
-#     provider: auto
-#     model: ""
-#     timeout: 30
-#     max_concurrency: 3     # 429 抑制
-#
-#   triage_specifier:
-#     provider: auto
-#     model: ""              # 安価・高速モデルで十分
-#     timeout: 120
-
-# ---------------------------------------------------------------------------
-# マルチエージェント委任
-# ---------------------------------------------------------------------------
-# delegation:
-#   max_iterations: 50             # 子エージェントあたりの最大ターン数
-#   max_concurrent_children: 3     # 並列実行数
-#   max_spawn_depth: 1             # ネスト深度（1=フラット、最大3）
-#   orchestrator_enabled: true
-#   model: ""                      # 委任先モデルを変えたい場合
-#   provider: ""
-
-# ---------------------------------------------------------------------------
-# MCP サーバー
-# ---------------------------------------------------------------------------
-# stdio（ローカルプロセス）と HTTP リモートの両方をサポート
-
-# mcp_servers:
-#   filesystem:
-#     command: "npx"
-#     args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
-#     timeout: 30
-#
-#   github:
-#     command: "npx"
-#     args: ["-y", "@modelcontextprotocol/server-github"]
-#     env:
-#       GITHUB_PERSONAL_ACCESS_TOKEN: "${GITHUB_PERSONAL_ACCESS_TOKEN}"
-#
-#   time:
-#     command: "uvx"
-#     args: ["mcp-server-time"]
-#
-#   # リモート HTTP サーバーの例
-#   # company_api:
-#   #   url: "https://mcp.internal.company.com/mcp"
-#   #   headers:
-#   #     Authorization: "Bearer ${COMPANY_MCP_TOKEN}"
-#   #   timeout: 300
-
-# ---------------------------------------------------------------------------
-# Bedrock (AWS) を使う場合
-# ---------------------------------------------------------------------------
-# model:
-#   default: us.anthropic.claude-sonnet-4-6
-#   provider: bedrock
-#   base_url: https://bedrock-runtime.us-east-2.amazonaws.com
-#
-# bedrock:
-#   region: us-east-2
+# fallback_model:
+#   provider: openrouter
+#   model: anthropic/claude-sonnet-4

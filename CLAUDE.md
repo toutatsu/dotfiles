@@ -97,10 +97,7 @@ config/
     SOUL.md                → ~/.hermes/SOUL.md (エージェント個性・口調の定義、全メッセージに注入される)
     .env.example           — Hermes Agent 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.hermes/AGENTS.md
-    profiles/
-      tt-agent/
-        config.yaml        → ~/.hermes/profiles/tt-agent/config.yaml
-        SOUL.md            → ~/.hermes/profiles/tt-agent/SOUL.md
+    (profiles/ は独立した Git リポジトリで管理 — hermes profile install で導入)
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
@@ -182,6 +179,17 @@ cp config/hermes/.env.example ~/.hermes/.env
 ```bash
 hermes config set model anthropic/claude-sonnet-4-6
 hermes config set terminal.backend local
+```
+
+### Profiles
+
+プロファイルは独立した Git リポジトリで管理する（dotfiles には含まない）。
+インストール方法:
+
+```bash
+hermes profile install github.com/you/tt-agent
+# または
+hermes profile install git@github.com:you/tt-agent.git
 ```
 
 ## OpenClaw Setup

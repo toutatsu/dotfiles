@@ -47,6 +47,8 @@ files=(
   "config/hermes/config.yaml:$HOME/.hermes/config.yaml"
   "config/hermes/AGENTS.md:$HOME/.hermes/AGENTS.md"
   "config/hermes/SOUL.md:$HOME/.hermes/SOUL.md"
+  "config/hermes/profiles/tt-agent/config.yaml:$HOME/.hermes/profiles/tt-agent/config.yaml"
+  "config/hermes/profiles/tt-agent/SOUL.md:$HOME/.hermes/profiles/tt-agent/SOUL.md"
 )
 
 # ---
@@ -155,6 +157,7 @@ if [ "$install" = true ]; then
   mkdir -p "$HOME/.deepagents/agent"
   mkdir -p "$HOME/.codex"
   mkdir -p "$HOME/.hermes"
+  mkdir -p "$HOME/.hermes/profiles/tt-agent"
   mkdir -p "$HOME/.ssh/control"
   mkdir -p "$HOME/.local/bin"
   mkdir -p "$HOME/.local/share/dotfiles/functions"

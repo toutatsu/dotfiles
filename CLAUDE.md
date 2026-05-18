@@ -97,6 +97,10 @@ config/
     SOUL.md                → ~/.hermes/SOUL.md (エージェント個性・口調の定義、全メッセージに注入される)
     .env.example           — Hermes Agent 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.hermes/AGENTS.md
+    profiles/
+      tt-agent/
+        config.yaml        → ~/.hermes/profiles/tt-agent/config.yaml
+        SOUL.md            → ~/.hermes/profiles/tt-agent/SOUL.md
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/

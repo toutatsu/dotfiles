@@ -98,6 +98,7 @@ config/
     .env.example           — Hermes Agent 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.hermes/AGENTS.md
     (profiles/ は独立した Git リポジトリで管理 — hermes profile install で導入)
+    profiles/toutatsu-agent/ — ~/.hermes/profiles/toutatsu-agent/ (独立リポジトリ)
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
@@ -187,9 +188,9 @@ hermes config set terminal.backend local
 インストール方法:
 
 ```bash
-hermes profile install github.com/you/tt-agent
+hermes profile install github.com/toutatsu/toutatsu-agent
 # または
-hermes profile install git@github.com:you/tt-agent.git
+hermes profile install git@github.com:toutatsu/toutatsu-agent.git
 ```
 
 ## OpenClaw Setup

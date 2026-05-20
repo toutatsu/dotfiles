@@ -34,22 +34,12 @@ config/
     claude.json.example    — ~/.claude.json のテンプレート (シンボリックリンク非対象)
     .env.example           — Claude Code 用 MCP トークン設定テンプレート (シンボリックリンク非対象)
     agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
-      code-reviewer.md
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
-      commit/SKILL.md      — git コミット作成（manual invoke のみ）
-      pr/SKILL.md          — GitHub PR 作成（manual invoke のみ）
-      search-docs/SKILL.md — ライブラリドキュメント検索（自動起動あり）
-      fix-issue/SKILL.md   — GitHub issue 番号指定で修正（manual invoke のみ）
-      explain-code/SKILL.md — アナロジーと ASCII 図でコードを説明（自動起動あり）
-      pr-review/           — PR diff を取得してコードレビュー（manual invoke / 自動起動あり）
-        SKILL.md           — スキル本体（context: fork + agent: code-reviewer）
-        template.md        — レビューコメントの記述テンプレート
-        examples/sample.md — 期待するレビュー出力のサンプル
-        scripts/validate.sh — PR 作成前の事前チェックスクリプト
-      _template/SKILL.md   — 新規スキル作成用テンプレート
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
-    bin/      → ~/.local/bin (ディレクトリごとシンボリックリンク)
+    bin/      → ~/.local/bin (ファイルごとシンボリックリンク)
+      ntfy-claude          → ~/.local/bin/ntfy-claude (ntfy 通知スクリプト)
+      ntfy-claude.env.example — ~/.config/ntfy-claude.env のテンプレート (シンボリックリンク非対象)
     functions/ → ~/.local/share/dotfiles/functions (source 専用、.profile が自動読み込み)
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme
@@ -65,14 +55,8 @@ config/
     tui.json               → ~/.config/opencode/tui.json
     AGENTS.md              → ~/.config/opencode/AGENTS.md
     agents/                → ~/.config/opencode/agents/ (ディレクトリごとシンボリックリンク)
-      code-reviewer.md
     skills/                → ~/.config/opencode/skills/ (ディレクトリごとシンボリックリンク)
-      _template/SKILL.md   — 新規スキル作成用テンプレート
     tools/                 → ~/.config/opencode/tools/ (ディレクトリごとシンボリックリンク)
-      git_summary.ts       — git コミットログ取得ツール
-      file_stats.ts        — ファイル統計情報取得ツール
-      add.ts / add.py      — 2つの数値を足し算するツール（Python ラッパー）
-      word_count.ts / word_count.py — テキストの行数・単語数・文字数をカウントするツール（Python ラッパー）
   deepagents/
     config.toml            → ~/.deepagents/config.toml
     .mcp.json              → ~/.deepagents/.mcp.json
@@ -80,25 +64,18 @@ config/
     .mcp.json.example      — .mcp.json の設定例テンプレート (シンボリックリンク非対象)
     .env.example           — ~/.deepagents/.env のテンプレート (シンボリックリンク非対象)
     agents/                → ~/.deepagents/agent/agents/ (ディレクトリごとシンボリックリンク)
-      researcher/AGENTS.md
-      code-writer/AGENTS.md
-      git-assistant/AGENTS.md
-      _template/AGENTS.md  — 新規サブエージェント作成用テンプレート
     skills/                → ~/.deepagents/agent/skills/ (ディレクトリごとシンボリックリンク)
-      _template/SKILL.md   — 新規スキル作成用テンプレート
   codex/
     config.toml            → ~/.codex/config.toml
     .env.example           — Codex CLI 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.codex/AGENTS.md
     skills/                → ~/.codex/skills/ (ディレクトリごとシンボリックリンク)
-      _template/SKILL.md   — 新規スキル作成用テンプレート
   hermes/
     config.yaml            → ~/.hermes/config.yaml
     SOUL.md                → ~/.hermes/SOUL.md (エージェント個性・口調の定義、全メッセージに注入される)
     .env.example           — Hermes Agent 用 API キー設定テンプレート (シンボリックリンク非対象)
     AGENTS.md              → ~/.hermes/AGENTS.md
-    (profiles/ は独立した Git リポジトリで管理 — hermes profile install で導入)
-    profiles/toutatsu-agent/ — ~/.hermes/profiles/toutatsu-agent/ (独立リポジトリ)
+    profiles/              — 独立 Git リポジトリで管理（hermes profile install で導入）
   openclaw/
     openclaw.json.example  — ~/.openclaw/openclaw.json のテンプレート (シンボリックリンク非対象)
   ssh/
@@ -184,14 +161,7 @@ hermes config set terminal.backend local
 
 ### Profiles
 
-プロファイルは独立した Git リポジトリで管理する（dotfiles には含まない）。
-インストール方法:
-
-```bash
-hermes profile install github.com/toutatsu/toutatsu-agent
-# または
-hermes profile install git@github.com:toutatsu/toutatsu-agent.git
-```
+プロファイルは独立 Git リポジトリで管理（dotfiles 非対象）。`hermes profile install github.com/toutatsu/toutatsu-agent` でインストール。
 
 ## OpenClaw Setup
 
@@ -205,6 +175,18 @@ npm install -g openclaw@latest
 openclaw onboard --install-daemon
 # 必要に応じてテンプレートを参考に ~/.openclaw/openclaw.json を調整
 ```
+
+## ntfy-claude Setup
+
+`config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。`install.sh` で `~/.local/bin/ntfy-claude` にリンクされる。
+接続先は git 管理外の `~/.config/ntfy-claude.env` で設定する（テンプレート: `config/shell/bin/ntfy-claude.env.example`）:
+
+```bash
+cp config/shell/bin/ntfy-claude.env.example ~/.config/ntfy-claude.env
+# NTFY_CLAUDE_URL と NTFY_CLAUDE_AUTH を編集
+```
+
+Claude Code フック（`Notification` / `PermissionRequest`）から自動呼び出しされる。
 
 ### Agents
 

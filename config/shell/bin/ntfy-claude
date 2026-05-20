@@ -1,0 +1,28 @@
+#!/bin/bash
+# ntfy サーバーへ Claude Code の通知を送信する
+set -euo pipefail
+
+# ~/.config/ntfy-claude.env があれば読み込む（テンプレート: config/shell/bin/ntfy-claude.env.example）
+[ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
+
+NTFY_URL="${NTFY_CLAUDE_URL:-https://ntfy.toutatsu.internal/claude}"
+NTFY_AUTH="${NTFY_CLAUDE_AUTH:-claude:claude}"
+
+title="${1:-Claude Code}"
+message="${2:-通知}"
+priority="${3:-default}"
+tags="${4:-bell}"
+click="${5:-}"
+actions="${6:-}"
+
+headers=(
+  -u "$NTFY_AUTH"
+  -H "Title: $title"
+  -H "Priority: $priority"
+  -H "Tags: $tags"
+)
+
+[ -n "$click" ] && headers+=(-H "Click: $click")
+[ -n "$actions" ] && headers+=(-H "Actions: $actions")
+
+curl -sk "${headers[@]}" -d "$message" "$NTFY_URL" > /dev/null

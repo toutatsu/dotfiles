@@ -54,6 +54,26 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ntfy-claude-hook 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "ntfy-claude-hook 2>/dev/null || true"
+          }
+        ]
+      }
     ]
   },
   "enabledPlugins": {

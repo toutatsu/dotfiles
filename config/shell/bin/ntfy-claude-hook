@@ -1,0 +1,80 @@
+#!/bin/bash
+# Claude Code フック用 ntfy 通知スクリプト
+# stdin から Claude Code が渡す JSON を読み取り、内容に応じた通知を送る
+set -euo pipefail
+
+[ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
+NTFY_URL="${NTFY_CLAUDE_URL:-https://ntfy.toutatsu.internal/claude}"
+NTFY_AUTH="${NTFY_CLAUDE_AUTH:-claude:claude}"
+
+# stdin が TTY の場合は何もしない（フック経由でない直接実行）
+if [ -t 0 ]; then
+  exit 0
+fi
+input=$(cat)
+
+event=$(printf '%s' "$input" | jq -r '.hook_event_name // ""')
+tool_name=$(printf '%s' "$input" | jq -r '.tool_name // ""')
+
+# ツール名を人間が読みやすい表記に変換
+friendly_tool() {
+  case "$1" in
+    Bash)    echo "シェルコマンド実行" ;;
+    Edit)    echo "ファイル編集" ;;
+    Write)   echo "ファイル書き込み" ;;
+    Read)    echo "ファイル読み込み" ;;
+    Glob)    echo "ファイル検索" ;;
+    Grep)    echo "テキスト検索" ;;
+    Agent)   echo "サブエージェント起動" ;;
+    mcp__*)  echo "MCP ツール: ${1#mcp__}" ;;
+    *)       echo "$1" ;;
+  esac
+}
+
+send_ntfy() {
+  local title="$1" message="$2" priority="${3:-default}" tags="${4:-bell}"
+  local headers=(-u "$NTFY_AUTH" -H "Title: $title" -H "Priority: $priority" -H "Tags: $tags")
+  curl -sk "${headers[@]}" -d "$message" "$NTFY_URL" > /dev/null
+}
+
+case "$event" in
+  PermissionRequest)
+    label=$(friendly_tool "$tool_name")
+    # ツールごとに詳細情報を取得
+    case "$tool_name" in
+      Bash)
+        detail=$(printf '%s' "$input" | jq -r '.tool_input.command // ""' | cut -c1-100)
+        ;;
+      Edit|Write)
+        detail=$(printf '%s' "$input" | jq -r '.tool_input.file_path // ""')
+        ;;
+      *)
+        detail=$(printf '%s' "$input" | jq -r '.tool_input | to_entries[0] | "\(.key): \(.value)"' 2>/dev/null || echo "")
+        ;;
+    esac
+    msg="${label}"
+    [ -n "$detail" ] && msg="${msg}: ${detail}"
+    send_ntfy "Claude Code: 承認が必要です" "$msg" "high" "warning,claude"
+    ;;
+
+  Notification)
+    notif_type=$(printf '%s' "$input" | jq -r '.notification_type // ""')
+    [ "$notif_type" = "permission_prompt" ] && exit 0
+    title=$(printf '%s' "$input" | jq -r '.notification_title // "Claude Code"')
+    body=$(printf '%s' "$input" | jq -r '.notification_body // "通知"')
+    send_ntfy "$title" "$body" "default" "bell,claude"
+    ;;
+
+  Stop)
+    send_ntfy "Claude Code" "入力待ちです" "default" "hand,claude"
+    ;;
+
+  *)
+    # 引数モード（ntfy-claude と同じ使い方）
+    title="${1:-Claude Code}"
+    message="${2:-通知}"
+    priority="${3:-default}"
+    tags="${4:-bell}"
+    send_ntfy "$title" "$message" "$priority" "$tags"
+    ;;
+esac

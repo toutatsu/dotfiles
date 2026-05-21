@@ -66,7 +66,8 @@ case "$event" in
     ;;
 
   Stop)
-    send_ntfy "Claude Code" "入力待ちです" "default" "hand,claude"
+    last_msg=$(printf '%s' "$input" | jq -r '.last_assistant_message // "入力待ちです"' | cut -c1-200)
+    send_ntfy "Claude Code: 完了" "$last_msg" "default" "hand,claude"
     ;;
 
   *)

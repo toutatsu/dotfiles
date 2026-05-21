@@ -54,7 +54,7 @@ case "$event" in
     esac
     msg="${label}"
     [ -n "$detail" ] && msg="${msg}: ${detail}"
-    send_ntfy "Claude Code: 承認が必要です" "$msg" "high" "warning,claude"
+    send_ntfy "Claude Code: 承認が必要です" "$msg" "default" "warning,claude"
     ;;
 
   Notification)

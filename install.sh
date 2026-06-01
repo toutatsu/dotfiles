@@ -53,13 +53,21 @@ files=(
 
 skipped=0
 linked=0
+failed=0
 restored=0
+removed=0
 
 process_dir() {
   local source_dir_path="$1"
   local target_dir_path="$2"
 
   if [ "$install" = true ]; then
+    if [ ! -d "$source_dir_path" ]; then
+      echo "  ⏭️  スキップ       $target_dir_path"
+      echo "              ソースディレクトリが存在しません: $source_dir_path"
+      (( skipped++ )) || true
+      return
+    fi
     if [ -L "$target_dir_path" ]; then
       echo "  ⏭️  スキップ       $target_dir_path"
       echo "              シンボリックリンクが既に存在します"
@@ -69,16 +77,25 @@ process_dir() {
     if [ -d "$target_dir_path" ] && [ ! -L "$target_dir_path" ]; then
       echo "  📦 バックアップ   $target_dir_path"
       echo "              → ${target_dir_path}.pre-dotfiles"
-      mv "$target_dir_path" "$target_dir_path.pre-dotfiles"
+      if ! mv "$target_dir_path" "$target_dir_path.pre-dotfiles"; then
+        echo "  ❌ 失敗           バックアップに失敗しました: $target_dir_path"
+        (( failed++ )) || true
+        return
+      fi
     fi
-    ln -s "$source_dir_path" "$target_dir_path"
-    echo "  🔗 リンク作成     $target_dir_path"
-    echo "              → $source_dir_path"
-    (( linked++ )) || true
+    if ln -s "$source_dir_path" "$target_dir_path"; then
+      echo "  🔗 リンク作成     $target_dir_path"
+      echo "              → $source_dir_path"
+      (( linked++ )) || true
+    else
+      echo "  ❌ 失敗           $target_dir_path"
+      (( failed++ )) || true
+    fi
   else
     if [ -L "$target_dir_path" ]; then
       rm "$target_dir_path"
       echo "  🗑️  リンク削除     $target_dir_path"
+      (( removed++ )) || true
     fi
     if [ -d "$target_dir_path.pre-dotfiles" ]; then
       mv "$target_dir_path.pre-dotfiles" "$target_dir_path"
@@ -114,19 +131,28 @@ process_file() {
     if [ -f "$target_file" ]; then
       echo "  📦 バックアップ   $target_file"
       echo "              → ${target_file}.pre-dotfiles"
-      mv "$target_file" "$target_file.pre-dotfiles"
+      if ! mv "$target_file" "$target_file.pre-dotfiles"; then
+        echo "  ❌ 失敗           バックアップに失敗しました: $target_file"
+        (( failed++ )) || true
+        return
+      fi
     fi
 
-    ln -s "$source_file" "$target_file"
-    echo "  🔗 リンク作成     $target_file"
-    echo "              → $source_file"
-    (( linked++ )) || true
+    if ln -s "$source_file" "$target_file"; then
+      echo "  🔗 リンク作成     $target_file"
+      echo "              → $source_file"
+      (( linked++ )) || true
+    else
+      echo "  ❌ 失敗           $target_file"
+      (( failed++ )) || true
+    fi
 
   else
 
     if [ -L "$target_file" ]; then
       rm "$target_file"
       echo "  🗑️  リンク削除     $target_file"
+      (( removed++ )) || true
     fi
 
     if [ -f "$target_file.pre-dotfiles" ]; then
@@ -196,6 +222,7 @@ for entry in "${file_spread_dirs[@]}"; do
   target_dir="${entry##*:}"
   for src_file in "$source_dir/$src_rel/"*; do
     [ -f "$src_file" ] || continue
+    [[ "$src_file" == *.example ]] && continue
     process_file "$src_file" "$target_dir/$(basename "$src_file")"
   done
 done
@@ -204,8 +231,12 @@ done
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ "$install" = true ]; then
-  echo "✅ 完了  リンク: ${linked}  スキップ: ${skipped}"
+  if [ "$failed" -gt 0 ]; then
+    echo "⚠️  完了  リンク: ${linked}  スキップ: ${skipped}  失敗: ${failed}"
+  else
+    echo "✅ 完了  リンク: ${linked}  スキップ: ${skipped}"
+  fi
 else
-  echo "✅ 完了  リストア: ${restored}"
+  echo "✅ 完了  削除: ${removed}  リストア: ${restored}"
 fi
 echo ""

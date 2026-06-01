@@ -4,3 +4,4 @@
 # 環境変数ファイル（API キーを含むため git 管理外）
 .env
 **/.env
+**/.claude/settings.local.json

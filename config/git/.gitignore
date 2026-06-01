@@ -5,3 +5,9 @@
 .env
 **/.env
 **/.claude/settings.local.json
+
+# Codex CLI が自動管理するシステムスキル
+config/codex/skills/.system/
+
+# Claude Code バイナリへのシンボリックリンク（バージョン固有）
+config/shell/bin/claude

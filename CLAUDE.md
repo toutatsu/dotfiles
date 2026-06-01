@@ -195,3 +195,16 @@ Claude Code フック（`Notification` / `PermissionRequest`）から自動呼�
 | Agent | Description |
 |-------|-------------|
 | `code-reviewer` | git diff でコードを確認し、セキュリティ・品質・可読性の観点でレビューする |
+
+## ディレクトリリンクによるファイル混入について
+
+`dirs` エントリ（`config/codex/skills/` など）はディレクトリごとシンボリックリンクするため、**外部ツールがリンク先に書き込んだファイルがリポジトリ内に直接現れる**。
+
+確認済みの混入例:
+- `config/codex/skills/.system/` — Codex CLI が自動インストールするシステムスキル
+- `config/shell/bin/claude` — Claude Code インストーラーが `PATH` 内 `bin/` に書き込んだリンク
+
+対策:
+- 混入しうるパターンは `config/git/.gitignore` に追加済み
+- 新しいツールを追加した後は `git status` で意図しないファイルが混入していないか確認する
+- 根本的な解決策はディレクトリリンクをやめてファイルごとリンク（`file_spread_dirs` 方式）に移行することだが、新スキル追加のたびに `install.sh` 更新が必要になるためトレードオフがある

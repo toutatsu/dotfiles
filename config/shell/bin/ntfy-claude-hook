@@ -5,7 +5,7 @@ set -euo pipefail
 
 [ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
 NTFY_URL="${NTFY_CLAUDE_URL:-https://ntfy.toutatsu.internal/claude}"
-NTFY_AUTH="${NTFY_CLAUDE_AUTH:-claude:claude}"
+NTFY_AUTH="${NTFY_CLAUDE_AUTH:-ntfy:ntfy}"
 
 # stdin が TTY の場合は何もしない（フック経由でない直接実行）
 if [ -t 0 ]; then

@@ -39,7 +39,7 @@ config/
   shell/  → .profile, .inputrc
     bin/      → ~/.local/bin (ファイルごとシンボリックリンク)
       ntfy-claude          → ~/.local/bin/ntfy-claude (ntfy 通知スクリプト)
-      ntfy-claude.env.example — ~/.config/ntfy-claude.env のテンプレート (シンボリックリンク非対象)
+      ntfy-claude.env.example — ntfy 接続先設定テンプレート（現在はスクリプト内に固定値、非対象）
     functions/ → ~/.local/share/dotfiles/functions (source 専用、.profile が自動読み込み)
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme
@@ -179,14 +179,10 @@ openclaw onboard --install-daemon
 ## ntfy-claude Setup
 
 `config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。`install.sh` で `~/.local/bin/ntfy-claude` にリンクされる。
-接続先は git 管理外の `~/.config/ntfy-claude.env` で設定する（テンプレート: `config/shell/bin/ntfy-claude.env.example`）:
+接続先（`NTFY_URL` / `NTFY_AUTH`）はスクリプト内に固定値で記述されている。
 
-```bash
-cp config/shell/bin/ntfy-claude.env.example ~/.config/ntfy-claude.env
-# NTFY_CLAUDE_URL と NTFY_CLAUDE_AUTH を編集
-```
-
-Claude Code フック（`Notification` / `PermissionRequest`）から自動呼び出しされる。
+Claude Code フック（`Stop` / `Notification` / `PermissionRequest`）から自動呼び出しされる。
+Stop フックは `async: true` で非同期実行されるためレスポンスをブロックしない。
 
 ### Agents
 

@@ -3,9 +3,8 @@
 # stdin から Claude Code が渡す JSON を読み取り、内容に応じた通知を送る
 set -euo pipefail
 
-[ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
-NTFY_URL="${NTFY_CLAUDE_URL:-https://ntfy.toutatsu.internal/claude}"
-NTFY_AUTH="${NTFY_CLAUDE_AUTH:-claude:claude}"
+NTFY_URL="https://ntfy.toutatsu.internal/claude"
+NTFY_AUTH="ntfy:ntfy"
 
 # stdin が TTY の場合は何もしない（フック経由でない直接実行）
 if [ -t 0 ]; then
@@ -34,7 +33,7 @@ friendly_tool() {
 send_ntfy() {
   local title="$1" message="$2" priority="${3:-default}" tags="${4:-bell}"
   local headers=(-u "$NTFY_AUTH" -H "Title: $title" -H "Priority: $priority" -H "Tags: $tags")
-  curl -sk "${headers[@]}" -d "$message" "$NTFY_URL" > /dev/null
+  curl -sk --max-time 5 "${headers[@]}" -d "$message" "$NTFY_URL" > /dev/null
 }
 
 case "$event" in
@@ -67,6 +66,8 @@ case "$event" in
 
   Stop)
     last_msg=$(printf '%s' "$input" | jq -r '.last_assistant_message // "入力待ちです"' | cut -c1-200)
+    # notify-send による デスクトップ通知（X サーバー環境のみ有効）
+    # notify-send 'Claude Code' '入力待ちです' --urgency=normal 2>/dev/null || true
     send_ntfy "Claude Code: 完了" "$last_msg" "default" "hand,claude"
     ;;
 

@@ -12,7 +12,6 @@
       "Bash(make *)"
     ]
   },
-  "model": "sonnet",
   "skillOverrides": {
     "update-config": "on",
     "keybindings-help": "on",
@@ -50,11 +49,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "notify-send 'Claude Code' '入力待ちです' --urgency=normal 2>/dev/null || true"
-          },
-          {
-            "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }

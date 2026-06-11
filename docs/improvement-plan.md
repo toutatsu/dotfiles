@@ -4,26 +4,6 @@
 
 前提知識は `CLAUDE.md` を参照（install.sh の file_links / dir_links / spread_dirs 方式、バックアップ拡張子 `*.pre-dotfiles`、readlink 検証によるリポジトリ外リンクの保護）。
 
-## 優先度: 高
-
-### 3. CI（GitHub Actions）
-
-**背景:** 今回の修正検証は手動スモークテスト（仮 HOME で install → uninstall → 残存リンク 0 を確認）だった。これを自動化して再発を防ぐ。
-
-**作業内容:** `.github/workflows/ci.yml` を作成し、push / PR で以下を実行:
-- `shellcheck` — `install.sh` と `config/shell/bin/` 配下の全スクリプト（shebang が bash のもの）
-- スモークテスト:
-  ```bash
-  export HOME=$(mktemp -d)
-  ./install.sh          # 出力に「失敗:」の数値が 0 であること（exit code は失敗数を反映しないため出力を検証）
-  ./install.sh          # 冪等性: 2 回目は全てスキップ、失敗 0
-  ./install.sh --uninstall
-  test "$(find "$HOME" -type l | wc -l)" -eq 0
-  ```
-- `jq` を使うスクリプト（claude-statusline, ntfy-claude-hook）はサンプル JSON を流して exit 0 を確認
-
-**受け入れ条件:** ワークフローが green。shellcheck の既存指摘はこのタスク内で修正する（量が多ければ別コミットに分割）。
-
 ## 優先度: 中
 
 ### 4. install.sh `--dry-run` オプション

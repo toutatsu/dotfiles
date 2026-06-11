@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `link.sh`.
+Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `install.sh`.
 
 ## Deployment
 
 ```bash
-make           # Symlink all dotfiles to $HOME (backs up existing files as *.dotfiles.old)
+make           # Symlink all dotfiles to $HOME (backs up existing files as *.pre-dotfiles)
 make uninstall # Remove symlinks and restore backups
 ```
 
@@ -37,9 +37,12 @@ config/
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
-    bin/      → ~/.local/bin (ファイルごとシンボリックリンク)
+    bin/      → ~/.local/bin (ファイルごとシンボリックリンク、*.example は除外)
       ntfy-claude          → ~/.local/bin/ntfy-claude (ntfy 通知スクリプト)
-      ntfy-claude.env.example — ntfy 接続先設定テンプレート（現在はスクリプト内に固定値、非対象）
+      ntfy-claude-hook     → ~/.local/bin/ntfy-claude-hook (Claude Code フック用、ntfy-claude を呼び出す)
+      ntfy-claude.env.example — ntfy 接続先設定テンプレート（~/.config/ntfy-claude.env に配置、非対象）
+      claude-statusline    → ~/.local/bin/claude-statusline (Claude Code statusLine 用スクリプト)
+      bitlocker-mount      → ~/.local/bin/bitlocker-mount (dislocker による BitLocker マウント)
     functions/ → ~/.local/share/dotfiles/functions (source 専用、.profile が自動読み込み)
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme
@@ -110,6 +113,7 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 `config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (token efficiency, subagent usage, response style).
 `config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
 Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
+ステータスラインは `config/shell/bin/claude-statusline`（`~/.local/bin` にリンク）を `statusLine.command` から呼び出す。
 
 MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
 Reason: `~/.claude.json` contains API tokens alongside server URLs, so it must stay out of git.
@@ -178,10 +182,9 @@ openclaw onboard --install-daemon
 
 ## ntfy-claude Setup
 
-`config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。`install.sh` で `~/.local/bin/ntfy-claude` にリンクされる。
-接続先（`NTFY_URL` / `NTFY_AUTH`）はスクリプト内に固定値で記述されている。
-
-Claude Code フック（`Stop` / `Notification` / `PermissionRequest`）から自動呼び出しされる。
+`config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。
+`config/shell/bin/ntfy-claude-hook` は Claude Code フック（`Stop` / `Notification` / `PermissionRequest`）から呼ばれ、stdin の JSON を整形して `ntfy-claude` 経由で通知する。どちらも `install.sh` で `~/.local/bin` にリンクされる。
+接続先（`NTFY_CLAUDE_URL` / `NTFY_CLAUDE_AUTH`）はスクリプト内のデフォルト値を `~/.config/ntfy-claude.env` で上書きできる（テンプレート: `config/shell/bin/ntfy-claude.env.example`）。
 Stop フックは `async: true` で非同期実行されるためレスポンスをブロックしない。
 
 ### Agents
@@ -194,13 +197,13 @@ Stop フックは `async: true` で非同期実行されるためレスポンス
 
 ## ディレクトリリンクによるファイル混入について
 
-`dirs` エントリ（`config/codex/skills/` など）はディレクトリごとシンボリックリンクするため、**外部ツールがリンク先に書き込んだファイルがリポジトリ内に直接現れる**。
+`dir_links` エントリ（`config/codex/skills/` など）はディレクトリごとシンボリックリンクするため、**外部ツールがリンク先に書き込んだファイルがリポジトリ内に直接現れる**。
 
 確認済みの混入例:
 - `config/codex/skills/.system/` — Codex CLI が自動インストールするシステムスキル
 - `config/shell/bin/claude` — Claude Code インストーラーが `PATH` 内 `bin/` に書き込んだリンク
 
 対策:
-- 混入しうるパターンは `config/git/.gitignore` に追加済み
+- 混入しうるパターンはリポジトリ直下の `.gitignore` に追加済み
 - 新しいツールを追加した後は `git status` で意図しないファイルが混入していないか確認する
-- 根本的な解決策はディレクトリリンクをやめてファイルごとリンク（`file_spread_dirs` 方式）に移行することだが、新スキル追加のたびに `install.sh` 更新が必要になるためトレードオフがある
+- 根本的な解決策はディレクトリリンクをやめてファイルごとリンク（`spread_dirs` 方式）に移行することだが、新スキル追加のたびに `install.sh` 更新が必要になるためトレードオフがある

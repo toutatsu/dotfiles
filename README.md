@@ -10,7 +10,7 @@ cd dotfiles
 make
 ```
 
-`make` creates symlinks from this repo to `$HOME`. Existing files are backed up as `*.dotfiles.old`.
+`make` creates symlinks from this repo to `$HOME`. Existing files are backed up as `*.pre-dotfiles`.
 
 ### oh-my-zsh (required for zsh)
 
@@ -32,6 +32,8 @@ cp .env.example ~/.env
 cp config/deepagents/.env.example ~/.deepagents/.env
 cp config/codex/.env.example ~/.codex/.env
 cp config/opencode/.env.example ~/.config/opencode/.env
+cp config/hermes/.env.example ~/.hermes/.env
+cp config/shell/bin/ntfy-claude.env.example ~/.config/ntfy-claude.env
 ```
 
 ## Uninstall
@@ -46,10 +48,24 @@ Removes symlinks and restores backed-up files.
 
 ```
 config/
-  git/         .gitconfig, .gitignore
-  shell/       .profile, .inputrc
-    bash/      .bash_profile, .bashrc
-    zsh/       .zshrc, mytheme.zsh-theme
-  tmux/        .tmux.conf
-  vim/         .vimrc
+  claude/        Claude Code (CLAUDE.md, settings.json, agents/, skills/)
+  codex/         Codex CLI (config.toml, AGENTS.md, skills/)
+  deepagents/    DeepAgents CLI (config.toml, .mcp.json, agents/, skills/)
+  editorconfig/  .editorconfig
+  git/           .gitconfig, .gitignore, .gitattributes
+  hermes/        Hermes Agent (config.yaml, SOUL.md, AGENTS.md)
+  openclaw/      OpenClaw (テンプレートのみ)
+  opencode/      opencode (opencode.jsonc, tui.json, agents/, skills/, tools/)
+  shell/         .profile, .inputrc
+    bash/        .bash_profile, .bashrc
+    bin/         ~/.local/bin に配置するスクリプト群
+    functions/   .profile が読み込むシェル関数
+    zsh/         .zshrc, mytheme.zsh-theme
+  ssh/           ~/.ssh/config のテンプレート
+  termux/        termux.properties (Termux 環境のみ)
+  tmux/          .tmux.conf
+  vim/           .vimrc
+  vscode/        settings.json
 ```
+
+See `CLAUDE.md` for the full file-by-file link map.

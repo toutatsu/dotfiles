@@ -6,18 +6,6 @@
 
 ## 優先度: 高
 
-### 1. ntfy 接続先の完全外部化
-
-**背景:** `config/shell/bin/ntfy-claude` に実際の接続先 URL（`https://ntfy.toutatsu.internal/claude`）と認証情報（`ntfy:ntfy`）がデフォルト値としてハードコードされている。リポジトリを公開する場合は漏洩になる。
-
-**作業内容:**
-- `ntfy-claude` のデフォルト値を空にし、`~/.config/ntfy-claude.env` からの読み込みを必須化する
-- `NTFY_CLAUDE_URL` が未設定の場合は分かりやすいエラーメッセージを出して exit 1（フック経由で呼ばれても安全なように stderr へ）
-- `ntfy-claude.env.example` に実際の値の記入例（プレースホルダ）があることを確認する
-- `CLAUDE.md` の「ntfy-claude Setup」を更新（env ファイルが必須になった旨）
-
-**受け入れ条件:** リポジトリ内を `grep -r "ntfy.toutatsu"` してヒットしない。env ファイルなしで実行するとエラーメッセージ付きで終了する。
-
 ### 2. DeepAgents AGENTS.md リンクの修正
 
 **背景:** `install.sh` の file_links に `config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md` があるが、リンク作成時にエラーが発生するため現在コメントアウト中（install.sh 内の `# エラーが発生するため無効化` 行）。

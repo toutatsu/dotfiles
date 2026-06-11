@@ -2,11 +2,17 @@
 # ntfy サーバーへ Claude Code の通知を送信する
 set -euo pipefail
 
-# 接続先のデフォルト値。~/.config/ntfy-claude.env で上書きできる
-# （テンプレート: ntfy-claude.env.example）
-NTFY_CLAUDE_URL="https://ntfy.toutatsu.internal/claude"
-NTFY_CLAUDE_AUTH="ntfy:ntfy"
-[ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
+# 接続先は ~/.config/ntfy-claude.env で設定する（テンプレート: ntfy-claude.env.example）
+NTFY_CLAUDE_URL=""
+NTFY_CLAUDE_AUTH=""
+if [ -f "$HOME/.config/ntfy-claude.env" ]; then
+  . "$HOME/.config/ntfy-claude.env"
+fi
+
+if [ -z "$NTFY_CLAUDE_URL" ]; then
+  echo "ntfy-claude: NTFY_CLAUDE_URL が設定されていません。~/.config/ntfy-claude.env を作成してください。" >&2
+  exit 1
+fi
 
 title="${1:-Claude Code}"
 message="${2:-通知}"

@@ -20,6 +20,7 @@
       "Read(~/.config/opencode/.env)",
       "Read(~/.config/ntfy-claude.env)",
       "Read(~/.openclaw/openclaw.json)",
+      "Read(~/.ssh/id_*)",
       "Bash(git push --force*)",
       "Bash(git push -f*)"
     ]
@@ -141,5 +142,6 @@
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "defaultView": "chat",
-  "model": "claude-fable-5"
+  "model": "claude-fable-5",
+  "fallbackModel": ["opus", "sonnet"]
 }

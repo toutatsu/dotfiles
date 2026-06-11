@@ -14,8 +14,12 @@ while [[ $# -gt 0 ]]; do
       dry_run=true
       shift
       ;;
+    status)
+      mode="status"
+      shift
+      ;;
     *)
-      echo "使い方: $0 [--uninstall] [--dry-run]"
+      echo "使い方: $0 [--uninstall|status] [--dry-run]"
       exit 1
       ;;
   esac
@@ -62,6 +66,40 @@ linked=0
 failed=0
 restored=0
 removed=0
+st_ok=0
+st_missing=0
+st_warn=0
+st_dead=0
+
+status_entry() {
+  local source_path="$1"
+  local target_path="$2"
+
+  if [ -L "$target_path" ]; then
+    local dest
+    dest="$(readlink "$target_path")"
+    if [ "$dest" = "$source_path" ]; then
+      if [ -e "$target_path" ]; then
+        echo "  ✅ リンク済み     $target_path"
+        (( st_ok++ )) || true
+      else
+        echo "  💀 リンク切れ     $target_path"
+        echo "              → $dest"
+        (( st_dead++ )) || true
+      fi
+    else
+      echo "  ⚠️  別リンク        $target_path"
+      echo "              → $dest"
+      (( st_warn++ )) || true
+    fi
+  elif [ -e "$target_path" ]; then
+    echo "  ⚠️  実体ファイル    $target_path"
+    (( st_warn++ )) || true
+  else
+    echo "  ❌ 未リンク       $target_path"
+    (( st_missing++ )) || true
+  fi
+}
 
 process_dir() {
   local source_dir_path="$1"
@@ -223,6 +261,8 @@ if [ "$mode" = "install" ]; then
   else
     echo "🏠 dotfiles インストール"
   fi
+elif [ "$mode" = "status" ]; then
+  echo "🔍 dotfiles ステータス"
 else
   if [ "$dry_run" = true ]; then
     echo "🗑️  dotfiles アンインストール [DRY RUN]"
@@ -249,7 +289,11 @@ fi
 for entry in "${file_links[@]}"; do
   src_rel="${entry%%:*}"
   target_file="${entry##*:}"
-  process_file "$repo_dir/$src_rel" "$target_file"
+  if [ "$mode" = "status" ]; then
+    status_entry "$repo_dir/$src_rel" "$target_file"
+  else
+    process_file "$repo_dir/$src_rel" "$target_file"
+  fi
 done
 
 # ディレクトリ単位でシンボリックリンクするエントリ
@@ -267,7 +311,11 @@ dir_links=(
 for entry in "${dir_links[@]}"; do
   src_rel="${entry%%:*}"
   target_dir_path="${entry##*:}"
-  process_dir "$repo_dir/$src_rel" "$target_dir_path"
+  if [ "$mode" = "status" ]; then
+    status_entry "$repo_dir/$src_rel" "$target_dir_path"
+  else
+    process_dir "$repo_dir/$src_rel" "$target_dir_path"
+  fi
 done
 
 # ファイル単位でシンボリックリンクするディレクトリ（既存ファイルを上書きしない）
@@ -282,7 +330,11 @@ for entry in "${spread_dirs[@]}"; do
   for src_file in "$repo_dir/$src_rel/"*; do
     [ -f "$src_file" ] || continue
     [[ "$src_file" == *.example ]] && continue
-    process_file "$src_file" "$spread_target_dir/$(basename "$src_file")"
+    if [ "$mode" = "status" ]; then
+      status_entry "$src_file" "$spread_target_dir/$(basename "$src_file")"
+    else
+      process_file "$src_file" "$spread_target_dir/$(basename "$src_file")"
+    fi
   done
 done
 
@@ -291,7 +343,14 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 dry_run_label=""
 [ "$dry_run" = true ] && dry_run_label=" [DRY RUN]"
-if [ "$mode" = "install" ]; then
+if [ "$mode" = "status" ]; then
+  total=$(( st_ok + st_missing + st_warn + st_dead ))
+  if [ "$st_missing" -gt 0 ] || [ "$st_warn" -gt 0 ] || [ "$st_dead" -gt 0 ]; then
+    echo "⚠️  合計: ${total}  ✅ リンク済み: ${st_ok}  ❌ 未リンク: ${st_missing}  ⚠️  警告: ${st_warn}  💀 切れ: ${st_dead}"
+  else
+    echo "✅ 合計: ${total}  すべてリンク済み"
+  fi
+elif [ "$mode" = "install" ]; then
   if [ "$failed" -gt 0 ]; then
     echo "⚠️  完了${dry_run_label}  リンク: ${linked}  スキップ: ${skipped}  失敗: ${failed}"
   else

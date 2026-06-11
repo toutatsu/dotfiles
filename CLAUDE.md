@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `install.sh`.
 
+残タスク（機能追加系）の仕様書は `docs/improvement-plan.md` を参照。着手前に必ず読むこと。
+
 ## Deployment
 
 ```bash

@@ -2,6 +2,7 @@
 set -u
 
 mode="install"
+dry_run=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -9,8 +10,12 @@ while [[ $# -gt 0 ]]; do
       mode="uninstall"
       shift
       ;;
+    --dry-run)
+      dry_run=true
+      shift
+      ;;
     *)
-      echo "使い方: $0 [--uninstall]"
+      echo "使い方: $0 [--uninstall] [--dry-run]"
       exit 1
       ;;
   esac
@@ -83,24 +88,32 @@ process_dir() {
     if [ -d "$target_dir_path" ] && [ ! -L "$target_dir_path" ]; then
       echo "  📦 バックアップ   $target_dir_path"
       echo "              → ${target_dir_path}.pre-dotfiles"
-      if ! mv "$target_dir_path" "$target_dir_path.pre-dotfiles"; then
-        echo "  ❌ 失敗           バックアップに失敗しました: $target_dir_path"
-        (( failed++ )) || true
-        return
+      if [ "$dry_run" = false ]; then
+        if ! mv "$target_dir_path" "$target_dir_path.pre-dotfiles"; then
+          echo "  ❌ 失敗           バックアップに失敗しました: $target_dir_path"
+          (( failed++ )) || true
+          return
+        fi
       fi
     fi
-    if ln -s "$source_dir_path" "$target_dir_path"; then
-      echo "  🔗 リンク作成     $target_dir_path"
-      echo "              → $source_dir_path"
-      (( linked++ )) || true
+    echo "  🔗 リンク作成     $target_dir_path"
+    echo "              → $source_dir_path"
+    if [ "$dry_run" = false ]; then
+      if ln -s "$source_dir_path" "$target_dir_path"; then
+        (( linked++ )) || true
+      else
+        echo "  ❌ 失敗           $target_dir_path"
+        (( failed++ )) || true
+      fi
     else
-      echo "  ❌ 失敗           $target_dir_path"
-      (( failed++ )) || true
+      (( linked++ )) || true
     fi
   else
     if [ -L "$target_dir_path" ]; then
       if [ "$(readlink "$target_dir_path")" = "$source_dir_path" ]; then
-        rm "$target_dir_path"
+        if [ "$dry_run" = false ]; then
+          rm "$target_dir_path"
+        fi
         echo "  🗑️  リンク削除     $target_dir_path"
         (( removed++ )) || true
       else
@@ -111,9 +124,11 @@ process_dir() {
       fi
     fi
     if [ -d "$target_dir_path.pre-dotfiles" ]; then
-      mv "$target_dir_path.pre-dotfiles" "$target_dir_path"
       echo "  ♻️  リストア       ${target_dir_path}.pre-dotfiles"
       echo "              → $target_dir_path"
+      if [ "$dry_run" = false ]; then
+        mv "$target_dir_path.pre-dotfiles" "$target_dir_path"
+      fi
       (( restored++ )) || true
     fi
   fi
@@ -127,7 +142,7 @@ process_file() {
 
   if [ "$mode" = "install" ]; then
 
-    if [ ! -d "$target_dir" ]; then
+    if [ ! -d "$target_dir" ] && [ "$dry_run" = false ]; then
       echo "  ⏭️  スキップ       $target_file"
       echo "              ディレクトリが存在しません: $target_dir"
       (( skipped++ )) || true
@@ -149,27 +164,35 @@ process_file() {
     if [ -f "$target_file" ]; then
       echo "  📦 バックアップ   $target_file"
       echo "              → ${target_file}.pre-dotfiles"
-      if ! mv "$target_file" "$target_file.pre-dotfiles"; then
-        echo "  ❌ 失敗           バックアップに失敗しました: $target_file"
-        (( failed++ )) || true
-        return
+      if [ "$dry_run" = false ]; then
+        if ! mv "$target_file" "$target_file.pre-dotfiles"; then
+          echo "  ❌ 失敗           バックアップに失敗しました: $target_file"
+          (( failed++ )) || true
+          return
+        fi
       fi
     fi
 
-    if ln -s "$source_file" "$target_file"; then
-      echo "  🔗 リンク作成     $target_file"
-      echo "              → $source_file"
-      (( linked++ )) || true
+    echo "  🔗 リンク作成     $target_file"
+    echo "              → $source_file"
+    if [ "$dry_run" = false ]; then
+      if ln -s "$source_file" "$target_file"; then
+        (( linked++ )) || true
+      else
+        echo "  ❌ 失敗           $target_file"
+        (( failed++ )) || true
+      fi
     else
-      echo "  ❌ 失敗           $target_file"
-      (( failed++ )) || true
+      (( linked++ )) || true
     fi
 
   else
 
     if [ -L "$target_file" ]; then
       if [ "$(readlink "$target_file")" = "$source_file" ]; then
-        rm "$target_file"
+        if [ "$dry_run" = false ]; then
+          rm "$target_file"
+        fi
         echo "  🗑️  リンク削除     $target_file"
         (( removed++ )) || true
       else
@@ -181,9 +204,11 @@ process_file() {
     fi
 
     if [ -f "$target_file.pre-dotfiles" ]; then
-      mv "$target_file.pre-dotfiles" "$target_file"
       echo "  ♻️  リストア       ${target_file}.pre-dotfiles"
       echo "              → $target_file"
+      if [ "$dry_run" = false ]; then
+        mv "$target_file.pre-dotfiles" "$target_file"
+      fi
       (( restored++ )) || true
     fi
 
@@ -193,15 +218,23 @@ process_file() {
 # ヘッダー
 echo ""
 if [ "$mode" = "install" ]; then
-  echo "🏠 dotfiles インストール"
+  if [ "$dry_run" = true ]; then
+    echo "🏠 dotfiles インストール [DRY RUN]"
+  else
+    echo "🏠 dotfiles インストール"
+  fi
 else
-  echo "🗑️  dotfiles アンインストール"
+  if [ "$dry_run" = true ]; then
+    echo "🗑️  dotfiles アンインストール [DRY RUN]"
+  else
+    echo "🗑️  dotfiles アンインストール"
+  fi
 fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 # シンボリックリンク先が存在しないディレクトリを事前に作成
-if [ "$mode" = "install" ]; then
+if [ "$mode" = "install" ] && [ "$dry_run" = false ]; then
   mkdir -p "$HOME/.claude"
   mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.deepagents/agent"
@@ -256,13 +289,15 @@ done
 # フッター
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+dry_run_label=""
+[ "$dry_run" = true ] && dry_run_label=" [DRY RUN]"
 if [ "$mode" = "install" ]; then
   if [ "$failed" -gt 0 ]; then
-    echo "⚠️  完了  リンク: ${linked}  スキップ: ${skipped}  失敗: ${failed}"
+    echo "⚠️  完了${dry_run_label}  リンク: ${linked}  スキップ: ${skipped}  失敗: ${failed}"
   else
-    echo "✅ 完了  リンク: ${linked}  スキップ: ${skipped}"
+    echo "✅ 完了${dry_run_label}  リンク: ${linked}  スキップ: ${skipped}"
   fi
 else
-  echo "✅ 完了  削除: ${removed}  リストア: ${restored}  スキップ: ${skipped}"
+  echo "✅ 完了${dry_run_label}  削除: ${removed}  リストア: ${restored}  スキップ: ${skipped}"
 fi
 echo ""

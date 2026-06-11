@@ -6,12 +6,6 @@
 
 ## 優先度: 中
 
-### 4. install.sh `--dry-run` オプション
-
-**作業内容:** 実際にはリンク作成・バックアップ・削除を行わず、何が起きるかだけを通常と同じフォーマットで表示する。`process_file` / `process_dir` 内の副作用（mv / ln / rm / mkdir / chmod）を `$dry_run` フラグでガードする実装が素直。
-
-**受け入れ条件:** `--dry-run` 実行前後で `find $HOME -newer <marker>` に差分がない。表示内容は実実行時と一致する。
-
 ### 5. install.sh `status` サブコマンド
 
 **作業内容:** 管理対象（file_links / dir_links / spread_dirs 展開後）の各エントリについて状態を一覧表示する:

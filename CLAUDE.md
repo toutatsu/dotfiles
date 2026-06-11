@@ -123,13 +123,15 @@ Template: `config/claude/claude.json.example`
 
 ### MCP Servers
 
-Add MCP servers manually after install. Known servers:
+`config/shell/bin/claude-mcp-setup`（`~/.local/bin/claude-mcp-setup` にリンク）でまとめて登録できる。`~/.env` に `GITHUB_PERSONAL_ACCESS_TOKEN` を設定してから実行する。冪等（登録済みはスキップ）。
 
 ```bash
-# GitHub (requires GITHUB_PERSONAL_ACCESS_TOKEN env var)
-claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+claude-mcp-setup
+```
 
-# 登録済みサーバー一覧
+手動で追加する場合:
+```bash
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 claude mcp list
 ```
 

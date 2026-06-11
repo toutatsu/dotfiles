@@ -6,10 +6,6 @@
 
 ## 優先度: 低（設計判断が必要）
 
-### 7. bootstrap スクリプト
-
-新環境セットアップの全自動化: 依存パッケージ確認（git, jq, curl, vim, tmux, zsh, dislocker）、oh-my-zsh インストール、`.env` テンプレート群の配置案内、`install.sh` 実行、までを 1 コマンドで。apt / pkg (Termux) の分岐が必要。
-
 ### 8. MCP サーバー登録の自動化
 
 `CLAUDE.md` 記載の `claude mcp add` 手順をスクリプト化（例: `config/shell/bin/claude-mcp-setup`）。トークンは `~/.env` から読む。冪等性（登録済みならスキップ）を持たせる。

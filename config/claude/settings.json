@@ -10,6 +10,18 @@
     "allow": [
       "Bash(git *)",
       "Bash(make *)"
+    ],
+    "deny": [
+      "Read(~/.claude.json)",
+      "Read(~/.env)",
+      "Read(~/.hermes/.env)",
+      "Read(~/.deepagents/.env)",
+      "Read(~/.codex/.env)",
+      "Read(~/.config/opencode/.env)",
+      "Read(~/.config/ntfy-claude.env)",
+      "Read(~/.openclaw/openclaw.json)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
     ]
   },
   "skillOverrides": {
@@ -21,11 +33,8 @@
     "schedule": "on",
     "claude-api": "on",
     "superpowers:using-superpowers": "on",
-    "superpowers:brainstorm": "on",
     "superpowers:brainstorming": "on",
-    "superpowers:write-plan": "on",
     "superpowers:writing-plans": "on",
-    "superpowers:execute-plan": "on",
     "superpowers:executing-plans": "on",
     "superpowers:systematic-debugging": "on",
     "superpowers:test-driven-development": "on",
@@ -37,6 +46,7 @@
     "superpowers:verification-before-completion": "on",
     "superpowers:requesting-code-review": "on",
     "superpowers:receiving-code-review": "on",
+    "commit-commands:commit": "off",
     "code-review:code-review": "on",
     "frontend-design:frontend-design": "on",
     "init": "on",
@@ -44,6 +54,17 @@
     "security-review": "on"
   },
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v shellcheck >/dev/null || exit 0; f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.example) ;; *.sh|*/shell/bin/*) out=$(shellcheck \"$f\" 2>&1) || { echo \"$out\" >&2; exit 2; };; esac"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
@@ -88,8 +109,8 @@
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
+    "playwright@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,

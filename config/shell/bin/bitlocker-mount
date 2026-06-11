@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+    echo "使い方:"
+    echo "  マウント:   $0 mount <デバイス> <マウントポイント> [-p <回復キー>]"
+    echo "  アンマウント: $0 umount <マウントポイント>"
+    echo ""
+    echo "例:"
+    echo "  $0 mount /dev/sdb2 /mnt/mydata"
+    echo "  $0 mount /dev/sdb2 /mnt/mydata -p 123456-234567-345678-456789-567890-678901-789012-890123"
+    echo "  $0 umount /mnt/mydata"
+    echo ""
+    echo "  ※ -p の値を省略すると回復キーを対話入力できる（シェル履歴に残らない）"
+    exit 1
+}
+
+do_mount() {
+    local device="$1"
+    local mountpoint="$2"
+    local recovery_key="${3:-}"
+    local dislocker_dir="${mountpoint}-tmp"
+
+    if [[ ! -b "$device" ]]; then
+        echo "エラー: デバイス '$device' が見つかりません" >&2
+        exit 1
+    fi
+
+    if mountpoint -q "$mountpoint" 2>/dev/null; then
+        echo "エラー: '$mountpoint' はすでにマウントされています" >&2
+        exit 1
+    fi
+
+    if [[ -d "$dislocker_dir" ]]; then
+        echo "警告: '$dislocker_dir' が残っています。削除します"
+        sudo rm -rf "$dislocker_dir"
+    fi
+
+    echo "マウントポイントを作成: $dislocker_dir, $mountpoint"
+    sudo mkdir -p "$dislocker_dir" "$mountpoint"
+
+    echo "BitLockerを解除中: $device -> $dislocker_dir"
+    if [[ -n "$recovery_key" ]]; then
+        sudo dislocker "$device" -p "$recovery_key" -- "$dislocker_dir"
+    else
+        sudo dislocker "$device" -u -- "$dislocker_dir"
+    fi
+
+    echo "ファイルシステムをマウント中: $dislocker_dir/dislocker-file -> $mountpoint"
+    sudo mount -o loop,uid=$(id -u),gid=$(id -g) "$dislocker_dir/dislocker-file" "$mountpoint"
+
+    echo "完了: $mountpoint にアクセスできます"
+}
+
+do_umount() {
+    local mountpoint="$1"
+    local dislocker_dir="${mountpoint}-tmp"
+
+    # umount 前に物理デバイスを特定（BitLocker パーティションの親ディスク）
+    # BitLocker デバイスが複数接続されている場合は誤った電源オフを避けるため特定しない
+    local device="" parent_disks
+    parent_disks=$(lsblk -rno FSTYPE,PKNAME | awk '$1=="BitLocker"{print $2}' | sort -u || true)
+    if [[ -n "$parent_disks" && $(wc -l <<<"$parent_disks") -eq 1 ]]; then
+        device="/dev/$parent_disks"
+    fi
+
+    local all_unmounted=true
+
+    echo "アンマウント中: $mountpoint"
+    if mountpoint -q "$mountpoint" 2>/dev/null || findmnt -n "$mountpoint" >/dev/null 2>&1; then
+        sudo umount "$mountpoint" 2>/dev/null || { echo "警告: '$mountpoint' をアンマウントできませんでした"; all_unmounted=false; }
+    else
+        echo "（すでにアンマウント済み）"
+    fi
+
+    echo "アンマウント中: $dislocker_dir"
+    if findmnt -n "$dislocker_dir" >/dev/null 2>&1; then
+        sudo umount "$dislocker_dir" 2>/dev/null || { echo "警告: '$dislocker_dir' をアンマウントできませんでした"; all_unmounted=false; }
+    else
+        echo "（すでにアンマウント済み）"
+    fi
+
+    if [[ -d "$dislocker_dir" ]]; then
+        sudo rm -rf "$dislocker_dir" && echo "削除: $dislocker_dir"
+    fi
+
+    echo "完了"
+
+    # マウントが残っていなければ（=all_unmounted）、電源オフ（安全な取り外し）を選択可能にする
+    if [[ "$all_unmounted" == true && -n "$device" && -b "$device" ]]; then
+        read -r -p "デバイス $device の電源を切って安全に取り外しますか？ [y/N]: " answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            sudo udisksctl power-off -b "$device" && echo "電源オフ: $device（再使用には挿し直してください）"
+        fi
+    fi
+}
+
+# --- メイン ---
+
+if [[ $# -lt 2 ]]; then
+    usage
+fi
+
+subcommand="$1"
+shift
+
+case "$subcommand" in
+    mount)
+        if [[ $# -lt 2 ]]; then usage; fi
+        device="$1"
+        mountpoint="$2"
+        shift 2
+        recovery_key=""
+        while [[ $# -gt 0 ]]; do
+            case "$1" in
+                -p)
+                    if [[ $# -ge 2 ]]; then
+                        recovery_key="$2"
+                        shift 2
+                    else
+                        read -rsp "回復キー: " recovery_key
+                        echo
+                        shift
+                    fi
+                    ;;
+                *) echo "不明なオプション: $1" >&2; usage ;;
+            esac
+        done
+        do_mount "$device" "$mountpoint" "$recovery_key"
+        ;;
+    umount|unmount)
+        if [[ $# -lt 1 ]]; then usage; fi
+        do_umount "$1"
+        ;;
+    *)
+        echo "不明なコマンド: $subcommand" >&2
+        usage
+        ;;
+esac

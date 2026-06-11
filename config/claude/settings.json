@@ -81,7 +81,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -91,7 +92,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }

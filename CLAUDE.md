@@ -8,6 +8,8 @@ Personal dotfiles managed via symlinks. The repo contains shell configs, editor 
 
 残タスク（機能追加系）の仕様書は `docs/improvement-plan.md` を参照。着手前に必ず読むこと。
 
+ツール固有のセットアップ手順（DeepAgents / Hermes / OpenClaw / ntfy-claude）は `.claude/rules/` 配下に分割されており、該当パスのファイル編集時に自動ロードされる。
+
 ## Deployment
 
 ```bash
@@ -37,6 +39,7 @@ config/
     .env.example           — Claude Code 用 MCP トークン設定テンプレート (シンボリックリンク非対象)
     agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
+    skill-template/        — スキル作成用テンプレート (シンボリックリンク非対象、skills/ に置くと実スキルとして読み込まれるため)
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
     bin/      → ~/.local/bin (ファイルごとシンボリックリンク、*.example は除外)
@@ -136,60 +139,6 @@ claude mcp list
 ```
 
 Scopes: `--scope user`（全プロジェクト共通）、`--scope local`（現在プロジェクトのみ、デフォルト）
-
-## DeepAgents CLI Setup
-
-`config/deepagents/config.toml` は `~/.deepagents/config.toml` にシンボリックリンクされる。
-`~/.deepagents/.env`（APIキー）は git 管理外。テンプレートから作成する:
-
-```bash
-uv tool install deepagents-cli
-cp config/deepagents/.env.example ~/.deepagents/.env
-# ~/.deepagents/.env にAPIキーを設定
-```
-
-ローカルの llama.cpp API を使う場合は `llama-server` をポート 8080 で起動しておく。
-
-## Hermes Agent Setup
-
-`config/hermes/config.yaml` は `~/.hermes/config.yaml` にシンボリックリンクされる。
-`~/.hermes/.env`（APIキー）は git 管理外。テンプレートから作成する:
-
-```bash
-pip install hermes-agent  # または pipx install hermes-agent
-cp config/hermes/.env.example ~/.hermes/.env
-# ~/.hermes/.env にAPIキーを設定
-```
-
-モデルやターミナルバックエンドの変更:
-```bash
-hermes config set model anthropic/claude-sonnet-4-6
-hermes config set terminal.backend local
-```
-
-### Profiles
-
-プロファイルは独立 Git リポジトリで管理（dotfiles 非対象）。`hermes profile install github.com/toutatsu/toutatsu-agent` でインストール。
-
-## OpenClaw Setup
-
-`config/openclaw/openclaw.json.example` はテンプレート (シンボリックリンク非対象)。
-`~/.openclaw/openclaw.json` は `openclaw onboard` が自動生成・更新するため、直接管理しない。
-トークン (`gateway.auth.token`) が含まれるため git 管理対象外。
-
-新環境セットアップ手順:
-```bash
-npm install -g openclaw@latest
-openclaw onboard --install-daemon
-# 必要に応じてテンプレートを参考に ~/.openclaw/openclaw.json を調整
-```
-
-## ntfy-claude Setup
-
-`config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。
-`config/shell/bin/ntfy-claude-hook` は Claude Code フック（`Stop` / `Notification` / `PermissionRequest`）から呼ばれ、stdin の JSON を整形して `ntfy-claude` 経由で通知する。どちらも `install.sh` で `~/.local/bin` にリンクされる。
-接続先（`NTFY_CLAUDE_URL` / `NTFY_CLAUDE_AUTH`）は `~/.config/ntfy-claude.env` で設定する（必須、テンプレート: `config/shell/bin/ntfy-claude.env.example`）。`NTFY_CLAUDE_URL` が未設定の場合はエラーメッセージを stderr に出力して exit 1 する。
-Stop フックは `async: true` で非同期実行されるためレスポンスをブロックしない。
 
 ### Agents
 

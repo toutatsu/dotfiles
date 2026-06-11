@@ -6,14 +6,6 @@
 
 ## 優先度: 低（設計判断が必要）
 
-### 8. MCP サーバー登録の自動化
-
-`CLAUDE.md` 記載の `claude mcp add` 手順をスクリプト化（例: `config/shell/bin/claude-mcp-setup`）。トークンは `~/.env` から読む。冪等性（登録済みならスキップ）を持たせる。
-
-### 9. opencode tools の整理統合
-
-`config/opencode/tools/` 配下のカスタムツールを棚卸しし、重複・未使用を削除、命名を統一する。opencode の skills と機能が被るものは skills 側へ寄せる。
-
 ### 10. シークレット管理の体系化
 
 現在 `.env` ファイルが 5 箇所以上に分散（`~/.env`, `~/.deepagents/.env`, `~/.codex/.env`, `~/.config/opencode/.env`, `~/.hermes/.env`, `~/.config/ntfy-claude.env`）。`~/.env` を単一のソースとし、各ツール固有 env はそこから参照・生成する方式を検討する。`.profile` の `set -a` 読み込み（対応済み）が基盤になる。

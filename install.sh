@@ -3,6 +3,7 @@ set -u
 
 mode="install"
 dry_run=false
+force=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -14,12 +15,16 @@ while [[ $# -gt 0 ]]; do
       dry_run=true
       shift
       ;;
+    --force)
+      force=true
+      shift
+      ;;
     status)
       mode="status"
       shift
       ;;
     *)
-      echo "使い方: $0 [--uninstall|status] [--dry-run]"
+      echo "使い方: $0 [--uninstall|status] [--dry-run] [--force]"
       exit 1
       ;;
   esac
@@ -116,12 +121,25 @@ process_dir() {
       if [ "$(readlink "$target_dir_path")" = "$source_dir_path" ]; then
         echo "  ⏭️  スキップ       $target_dir_path"
         echo "              シンボリックリンクが既に存在します"
-      else
+        (( skipped++ )) || true
+        return
+      elif [ "$force" = false ]; then
         echo "  ⚠️  スキップ       $target_dir_path"
         echo "              別の場所を指すリンクが存在します: $(readlink "$target_dir_path")"
+        echo "              上書きするには --force を指定してください"
+        (( skipped++ )) || true
+        return
+      else
+        echo "  📦 バックアップ   $target_dir_path"
+        echo "              → ${target_dir_path}.pre-dotfiles"
+        if [ "$dry_run" = false ]; then
+          if ! mv "$target_dir_path" "$target_dir_path.pre-dotfiles"; then
+            echo "  ❌ 失敗           バックアップに失敗しました: $target_dir_path"
+            (( failed++ )) || true
+            return
+          fi
+        fi
       fi
-      (( skipped++ )) || true
-      return
     fi
     if [ -d "$target_dir_path" ] && [ ! -L "$target_dir_path" ]; then
       echo "  📦 バックアップ   $target_dir_path"
@@ -191,12 +209,25 @@ process_file() {
       if [ "$(readlink "$target_file")" = "$source_file" ]; then
         echo "  ⏭️  スキップ       $target_file"
         echo "              シンボリックリンクが既に存在します"
-      else
+        (( skipped++ )) || true
+        return
+      elif [ "$force" = false ]; then
         echo "  ⚠️  スキップ       $target_file"
         echo "              別の場所を指すリンクが存在します: $(readlink "$target_file")"
+        echo "              上書きするには --force を指定してください"
+        (( skipped++ )) || true
+        return
+      else
+        echo "  📦 バックアップ   $target_file"
+        echo "              → ${target_file}.pre-dotfiles"
+        if [ "$dry_run" = false ]; then
+          if ! mv "$target_file" "$target_file.pre-dotfiles"; then
+            echo "  ❌ 失敗           バックアップに失敗しました: $target_file"
+            (( failed++ )) || true
+            return
+          fi
+        fi
       fi
-      (( skipped++ )) || true
-      return
     fi
 
     if [ -f "$target_file" ]; then
@@ -255,11 +286,13 @@ process_file() {
 
 # ヘッダー
 echo ""
+force_label=""
+[ "$force" = true ] && force_label=" [FORCE]"
 if [ "$mode" = "install" ]; then
   if [ "$dry_run" = true ]; then
-    echo "🏠 dotfiles インストール [DRY RUN]"
+    echo "🏠 dotfiles インストール [DRY RUN]${force_label}"
   else
-    echo "🏠 dotfiles インストール"
+    echo "🏠 dotfiles インストール${force_label}"
   fi
 elif [ "$mode" = "status" ]; then
   echo "🔍 dotfiles ステータス"

@@ -6,6 +6,13 @@ export EDITOR=vim
 # User-local binaries (e.g. Claude Code, pip-installed tools)
 export PATH="$HOME/.local/bin:$PATH"
 
+# 共通環境変数（テンプレート: dotfiles/.env.example）
+if [ -f "$HOME/.env" ]; then
+  set -a
+  . "$HOME/.env"
+  set +a
+fi
+
 ### ssh ###
 
 if [ -n "$TERMUX_VERSION" ]; then

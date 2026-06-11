@@ -1,11 +1,12 @@
 #!/bin/bash
+set -u
 
-install=true
+mode="install"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --uninstall)
-      install=false
+      mode="uninstall"
       shift
       ;;
     *)
@@ -15,11 +16,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# スクリプト自身のディレクトリ（どこから実行しても正しく解決される）
-source_dir="$(cd "$(dirname "$0")" && pwd)"
+# リポジトリのルートディレクトリ（どこから実行しても正しく解決される）
+repo_dir="$(cd "$(dirname "$0")" && pwd)"
 
 # "リポジトリ内の相対パス:配置先の絶対パス" 形式
-files=(
+file_links=(
   "config/shell/.profile:$HOME/.profile"
   "config/shell/.inputrc:$HOME/.inputrc"
   "config/shell/bash/.bash_profile:$HOME/.bash_profile"
@@ -61,7 +62,7 @@ process_dir() {
   local source_dir_path="$1"
   local target_dir_path="$2"
 
-  if [ "$install" = true ]; then
+  if [ "$mode" = "install" ]; then
     if [ ! -d "$source_dir_path" ]; then
       echo "  ⏭️  スキップ       $target_dir_path"
       echo "              ソースディレクトリが存在しません: $source_dir_path"
@@ -69,8 +70,13 @@ process_dir() {
       return
     fi
     if [ -L "$target_dir_path" ]; then
-      echo "  ⏭️  スキップ       $target_dir_path"
-      echo "              シンボリックリンクが既に存在します"
+      if [ "$(readlink "$target_dir_path")" = "$source_dir_path" ]; then
+        echo "  ⏭️  スキップ       $target_dir_path"
+        echo "              シンボリックリンクが既に存在します"
+      else
+        echo "  ⚠️  スキップ       $target_dir_path"
+        echo "              別の場所を指すリンクが存在します: $(readlink "$target_dir_path")"
+      fi
       (( skipped++ )) || true
       return
     fi
@@ -93,9 +99,16 @@ process_dir() {
     fi
   else
     if [ -L "$target_dir_path" ]; then
-      rm "$target_dir_path"
-      echo "  🗑️  リンク削除     $target_dir_path"
-      (( removed++ )) || true
+      if [ "$(readlink "$target_dir_path")" = "$source_dir_path" ]; then
+        rm "$target_dir_path"
+        echo "  🗑️  リンク削除     $target_dir_path"
+        (( removed++ )) || true
+      else
+        echo "  ⏭️  スキップ       $target_dir_path"
+        echo "              このリポジトリ外を指すリンクのため削除しません"
+        (( skipped++ )) || true
+        return
+      fi
     fi
     if [ -d "$target_dir_path.pre-dotfiles" ]; then
       mv "$target_dir_path.pre-dotfiles" "$target_dir_path"
@@ -112,7 +125,7 @@ process_file() {
   local target_dir
   target_dir="$(dirname "$target_file")"
 
-  if [ "$install" = true ]; then
+  if [ "$mode" = "install" ]; then
 
     if [ ! -d "$target_dir" ]; then
       echo "  ⏭️  スキップ       $target_file"
@@ -122,8 +135,13 @@ process_file() {
     fi
 
     if [ -L "$target_file" ]; then
-      echo "  ⏭️  スキップ       $target_file"
-      echo "              シンボリックリンクが既に存在します"
+      if [ "$(readlink "$target_file")" = "$source_file" ]; then
+        echo "  ⏭️  スキップ       $target_file"
+        echo "              シンボリックリンクが既に存在します"
+      else
+        echo "  ⚠️  スキップ       $target_file"
+        echo "              別の場所を指すリンクが存在します: $(readlink "$target_file")"
+      fi
       (( skipped++ )) || true
       return
     fi
@@ -150,9 +168,16 @@ process_file() {
   else
 
     if [ -L "$target_file" ]; then
-      rm "$target_file"
-      echo "  🗑️  リンク削除     $target_file"
-      (( removed++ )) || true
+      if [ "$(readlink "$target_file")" = "$source_file" ]; then
+        rm "$target_file"
+        echo "  🗑️  リンク削除     $target_file"
+        (( removed++ )) || true
+      else
+        echo "  ⏭️  スキップ       $target_file"
+        echo "              このリポジトリ外を指すリンクのため削除しません"
+        (( skipped++ )) || true
+        return
+      fi
     fi
 
     if [ -f "$target_file.pre-dotfiles" ]; then
@@ -167,7 +192,7 @@ process_file() {
 
 # ヘッダー
 echo ""
-if [ "$install" = true ]; then
+if [ "$mode" = "install" ]; then
   echo "🏠 dotfiles インストール"
 else
   echo "🗑️  dotfiles アンインストール"
@@ -176,7 +201,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 # シンボリックリンク先が存在しないディレクトリを事前に作成
-if [ "$install" = true ]; then
+if [ "$mode" = "install" ]; then
+  mkdir -p "$HOME/.claude"
   mkdir -p "$HOME/.config/opencode"
   mkdir -p "$HOME/.deepagents/agent"
   mkdir -p "$HOME/.codex"
@@ -187,14 +213,14 @@ if [ "$install" = true ]; then
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
 
-for entry in "${files[@]}"; do
+for entry in "${file_links[@]}"; do
   src_rel="${entry%%:*}"
   target_file="${entry##*:}"
-  process_file "$source_dir/$src_rel" "$target_file"
+  process_file "$repo_dir/$src_rel" "$target_file"
 done
 
 # ディレクトリ単位でシンボリックリンクするエントリ
-dirs=(
+dir_links=(
   "config/deepagents/agents:$HOME/.deepagents/agent/agents"
   "config/deepagents/skills:$HOME/.deepagents/agent/skills"
   "config/claude/agents:$HOME/.claude/agents"
@@ -205,38 +231,38 @@ dirs=(
   "config/codex/skills:$HOME/.codex/skills"
 )
 
-for entry in "${dirs[@]}"; do
+for entry in "${dir_links[@]}"; do
   src_rel="${entry%%:*}"
   target_dir_path="${entry##*:}"
-  process_dir "$source_dir/$src_rel" "$target_dir_path"
+  process_dir "$repo_dir/$src_rel" "$target_dir_path"
 done
 
 # ファイル単位でシンボリックリンクするディレクトリ（既存ファイルを上書きしない）
-file_spread_dirs=(
+spread_dirs=(
   "config/shell/bin:$HOME/.local/bin"
   "config/shell/functions:$HOME/.local/share/dotfiles/functions"
 )
 
-for entry in "${file_spread_dirs[@]}"; do
+for entry in "${spread_dirs[@]}"; do
   src_rel="${entry%%:*}"
-  target_dir="${entry##*:}"
-  for src_file in "$source_dir/$src_rel/"*; do
+  spread_target_dir="${entry##*:}"
+  for src_file in "$repo_dir/$src_rel/"*; do
     [ -f "$src_file" ] || continue
     [[ "$src_file" == *.example ]] && continue
-    process_file "$src_file" "$target_dir/$(basename "$src_file")"
+    process_file "$src_file" "$spread_target_dir/$(basename "$src_file")"
   done
 done
 
 # フッター
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-if [ "$install" = true ]; then
+if [ "$mode" = "install" ]; then
   if [ "$failed" -gt 0 ]; then
     echo "⚠️  完了  リンク: ${linked}  スキップ: ${skipped}  失敗: ${failed}"
   else
     echo "✅ 完了  リンク: ${linked}  スキップ: ${skipped}"
   fi
 else
-  echo "✅ 完了  削除: ${removed}  リストア: ${restored}"
+  echo "✅ 完了  削除: ${removed}  リストア: ${restored}  スキップ: ${skipped}"
 fi
 echo ""

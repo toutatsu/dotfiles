@@ -4,14 +4,6 @@
 
 前提知識は `CLAUDE.md` を参照（install.sh の file_links / dir_links / spread_dirs 方式、バックアップ拡張子 `*.pre-dotfiles`、readlink 検証によるリポジトリ外リンクの保護）。
 
-## 優先度: 低（設計判断が必要）
-
-### 10. シークレット管理の体系化
-
-現在 `.env` ファイルが 5 箇所以上に分散（`~/.env`, `~/.deepagents/.env`, `~/.codex/.env`, `~/.config/opencode/.env`, `~/.hermes/.env`, `~/.config/ntfy-claude.env`）。`~/.env` を単一のソースとし、各ツール固有 env はそこから参照・生成する方式を検討する。`.profile` の `set -a` 読み込み（対応済み）が基盤になる。
-
----
-
 ## 進め方の注意
 
 - 無関係な変更は別コミットに分ける（コミットメッセージは既存の Conventional Commits 形式・日本語に合わせる）

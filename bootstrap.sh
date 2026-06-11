@@ -57,37 +57,69 @@ else
 fi
 echo ""
 
-# --- .env テンプレート配置案内 ---
+# --- マスター ~/.env ---
 echo "🔑 シークレット設定ファイルを確認中..."
-templates=(
-  "config/shell/bin/ntfy-claude.env.example:$HOME/.config/ntfy-claude.env"
-  "config/claude/.env.example:$HOME/.env"
-  "config/deepagents/.env.example:$HOME/.deepagents/.env"
-  "config/hermes/.env.example:$HOME/.hermes/.env"
-  "config/opencode/.env.example:$HOME/.config/opencode/.env"
-  "config/codex/.env.example:$HOME/.codex/.env"
-)
 
-needs_setup=false
-for entry in "${templates[@]}"; do
-  src_rel="${entry%%:*}"
-  dest="${entry##*:}"
-  src="$repo_dir/$src_rel"
-  [ -f "$src" ] || continue
-  if [ ! -f "$dest" ]; then
-    echo "  ⚠️  未作成: $dest"
-    echo "       テンプレート: $src_rel"
-    needs_setup=true
-  fi
-done
+master_template="$repo_dir/config/claude/.env.example"
+master_dest="$HOME/.env"
 
-if [ "$needs_setup" = false ]; then
-  echo "  ✅ すべての設定ファイルが存在します"
-else
+if [ ! -f "$master_dest" ]; then
+  echo "  ⚠️  未作成: $master_dest"
+  echo "       テンプレートからコピーして各値を設定してください:"
+  echo "         cp $master_template $master_dest"
+  echo "         \$EDITOR $master_dest"
   echo ""
-  echo "  上記ファイルをテンプレートからコピーして設定してください:"
-  echo "    cp <テンプレート> <配置先>  # 配置先を編集してトークン等を設定"
+  echo "  ❌ ~/.env が必須です。設定後に再実行してください。"
+  exit 1
 fi
+
+echo "  ✅ $master_dest が存在します"
+echo ""
+
+# --- ツール固有 .env を ~/.env から生成 ---
+# extract_vars <dest> <VAR1> [VAR2 ...] — 不足している変数のみ追記
+extract_vars() {
+  local dest="$1"; shift
+  local vars=("$@")
+  local dest_dir
+  dest_dir="$(dirname "$dest")"
+
+  mkdir -p "$dest_dir"
+
+  local added=false
+  for var in "${vars[@]}"; do
+    # ~/.env に設定されていない変数はスキップ
+    local value
+    value="$(grep -E "^${var}=" "$master_dest" | head -1 | cut -d= -f2-)"
+    [ -z "$value" ] && continue
+
+    # 既に dest に存在する変数はスキップ
+    if [ -f "$dest" ] && grep -qE "^${var}=" "$dest"; then
+      continue
+    fi
+
+    printf '%s=%s\n' "$var" "$value" >> "$dest"
+    added=true
+  done
+
+  if [ "$added" = true ]; then
+    echo "  ✅ 生成/更新:  $dest"
+  else
+    echo "  ⏭️  スキップ:   $dest (変数なし or 既存)"
+  fi
+}
+
+echo "🔧 ツール固有 .env を生成中..."
+
+# hermes: ~/.env から抽出（hermes は ~/.hermes/.env を直接読む）
+extract_vars "$HOME/.hermes/.env" \
+  ANTHROPIC_API_KEY OPENAI_API_KEY GOOGLE_API_KEY OPENROUTER_API_KEY \
+  GROQ_API_KEY GITHUB_PERSONAL_ACCESS_TOKEN TOGETHER_API_KEY
+
+# ntfy-claude: ntfy 専用変数を ~/.env から抽出
+extract_vars "$HOME/.config/ntfy-claude.env" \
+  NTFY_CLAUDE_URL NTFY_CLAUDE_AUTH
+
 echo ""
 
 # --- dotfiles インストール ---

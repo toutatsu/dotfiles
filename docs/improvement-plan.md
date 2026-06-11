@@ -6,17 +6,6 @@
 
 ## 優先度: 高
 
-### 2. DeepAgents AGENTS.md リンクの修正
-
-**背景:** `install.sh` の file_links に `config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md` があるが、リンク作成時にエラーが発生するため現在コメントアウト中（install.sh 内の `# エラーが発生するため無効化` 行）。
-
-**作業内容:**
-- エラーの原因を調査する。候補: `~/.deepagents/agent` を DeepAgents CLI 自身が管理していて競合する / 既存の実体ファイルとの衝突 / リンク先パスがそもそも誤り
-- DeepAgents CLI が実際に AGENTS.md を読むパスを確認し、正しいリンク先に修正してコメントアウトを解除する
-- 修正不能（CLI が実体ファイルを要求する等）なら、コメントを「なぜ無効か」が分かる説明に書き換え、`CLAUDE.md` に制約として記載する
-
-**受け入れ条件:** 仮 HOME（`HOME=$(mktemp -d)`）でのインストールが 失敗: 0 のまま、AGENTS.md がリンクされる（または無効である理由がドキュメント化されている）。
-
 ### 3. CI（GitHub Actions）
 
 **背景:** 今回の修正検証は手動スモークテスト（仮 HOME で install → uninstall → 残存リンク 0 を確認）だった。これを自動化して再発を防ぐ。

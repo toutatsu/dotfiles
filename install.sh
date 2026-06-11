@@ -42,7 +42,7 @@ file_links=(
   "config/opencode/AGENTS.md:$HOME/.config/opencode/AGENTS.md"
   "config/deepagents/config.toml:$HOME/.deepagents/config.toml"
   "config/deepagents/.mcp.json:$HOME/.deepagents/.mcp.json"
-  # "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"  # エラーが発生するため無効化
+  "config/deepagents/AGENTS.md:$HOME/.deepagents/agent/AGENTS.md"
   "config/codex/config.toml:$HOME/.codex/config.toml"
   "config/codex/AGENTS.md:$HOME/.codex/AGENTS.md"
   "config/hermes/config.yaml:$HOME/.hermes/config.yaml"

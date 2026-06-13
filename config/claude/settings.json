@@ -10,51 +10,43 @@
     "allow": [
       "Bash(git *)",
       "Bash(make *)"
+    ],
+    "deny": [
+      "Read(~/.claude.json)",
+      "Read(~/.env)",
+      "Read(~/.hermes/.env)",
+      "Read(~/.deepagents/.env)",
+      "Read(~/.codex/.env)",
+      "Read(~/.config/opencode/.env)",
+      "Read(~/.config/ntfy-claude.env)",
+      "Read(~/.openclaw/openclaw.json)",
+      "Read(~/.ssh/id_*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
     ]
   },
-  "model": "sonnet",
   "skillOverrides": {
-    "update-config": "on",
-    "keybindings-help": "on",
-    "simplify": "on",
-    "fewer-permission-prompts": "on",
-    "loop": "on",
-    "schedule": "on",
-    "claude-api": "on",
-    "superpowers:using-superpowers": "on",
-    "superpowers:brainstorm": "on",
-    "superpowers:brainstorming": "on",
-    "superpowers:write-plan": "on",
-    "superpowers:writing-plans": "on",
-    "superpowers:execute-plan": "on",
-    "superpowers:executing-plans": "on",
-    "superpowers:systematic-debugging": "on",
-    "superpowers:test-driven-development": "on",
-    "superpowers:subagent-driven-development": "on",
-    "superpowers:dispatching-parallel-agents": "on",
-    "superpowers:using-git-worktrees": "on",
-    "superpowers:finishing-a-development-branch": "on",
-    "superpowers:writing-skills": "on",
-    "superpowers:verification-before-completion": "on",
-    "superpowers:requesting-code-review": "on",
-    "superpowers:receiving-code-review": "on",
-    "code-review:code-review": "on",
-    "frontend-design:frontend-design": "on",
-    "init": "on",
-    "review": "on",
-    "security-review": "on"
+    "commit-commands:commit": "off"
   },
   "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v shellcheck >/dev/null || exit 0; f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.example) ;; *.sh|*/shell/bin/*) out=$(shellcheck \"$f\" 2>&1) || { echo \"$out\" >&2; exit 2; };; esac"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "# notify-send 'Claude Code' '入力待ちです' --urgency=normal 2>/dev/null || true"
-          },
-          {
-            "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -64,7 +56,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }
@@ -74,11 +67,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "ntfy-claude-hook 2>/dev/null || true"
+            "command": "ntfy-claude-hook 2>/dev/null || true",
+            "async": true
           }
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "claude-statusline",
+    "hideVimModeIndicator": true
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
@@ -87,8 +86,8 @@
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
+    "github@claude-plugins-official": false,
+    "playwright@claude-plugins-official": false,
     "feature-dev@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
@@ -116,5 +115,7 @@
   "todoFeatureEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "defaultView": "chat"
+  "defaultView": "chat",
+  "model": "claude-fable-5",
+  "fallbackModel": ["opus", "sonnet"]
 }

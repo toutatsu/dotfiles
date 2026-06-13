@@ -4,12 +4,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Is
 
-Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `link.sh`.
+Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `install.sh`.
+
+残タスク（機能追加系）の仕様書は `docs/improvement-plan.md` を参照。着手前に必ず読むこと。
+
+ツール固有のセットアップ手順（DeepAgents / Hermes / OpenClaw / ntfy-claude）は `.claude/rules/` 配下に分割されており、該当パスのファイル編集時に自動ロードされる。
 
 ## Deployment
 
 ```bash
-make           # Symlink all dotfiles to $HOME (backs up existing files as *.dotfiles.old)
+make           # Symlink all dotfiles to $HOME (backs up existing files as *.pre-dotfiles)
 make uninstall # Remove symlinks and restore backups
 ```
 
@@ -35,11 +39,15 @@ config/
     .env.example           — Claude Code 用 MCP トークン設定テンプレート (シンボリックリンク非対象)
     agents/                → ~/.claude/agents/ (ディレクトリごとシンボリックリンク)
     skills/                → ~/.claude/skills/ (ディレクトリごとシンボリックリンク)
+    skill-template/        — スキル作成用テンプレート (シンボリックリンク非対象、skills/ に置くと実スキルとして読み込まれるため)
   git/    → .gitconfig, .gitignore, .gitattributes
   shell/  → .profile, .inputrc
-    bin/      → ~/.local/bin (ファイルごとシンボリックリンク)
+    bin/      → ~/.local/bin (ファイルごとシンボリックリンク、*.example は除外)
       ntfy-claude          → ~/.local/bin/ntfy-claude (ntfy 通知スクリプト)
-      ntfy-claude.env.example — ~/.config/ntfy-claude.env のテンプレート (シンボリックリンク非対象)
+      ntfy-claude-hook     → ~/.local/bin/ntfy-claude-hook (Claude Code フック用、ntfy-claude を呼び出す)
+      ntfy-claude.env.example — ntfy 接続先設定テンプレート（~/.config/ntfy-claude.env に配置、非対象）
+      claude-statusline    → ~/.local/bin/claude-statusline (Claude Code statusLine 用スクリプト)
+      bitlocker-mount      → ~/.local/bin/bitlocker-mount (dislocker による BitLocker マウント)
     functions/ → ~/.local/share/dotfiles/functions (source 専用、.profile が自動読み込み)
     bash/ → .bash_profile, .bashrc
     zsh/  → .zshrc, mytheme.zsh-theme
@@ -110,6 +118,7 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 `config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (token efficiency, subagent usage, response style).
 `config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
 Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
+ステータスラインは `config/shell/bin/claude-statusline`（`~/.local/bin` にリンク）を `statusLine.command` から呼び出す。
 
 MCP server configs and credentials live in `~/.claude.json` (not version-controlled).
 Reason: `~/.claude.json` contains API tokens alongside server URLs, so it must stay out of git.
@@ -117,76 +126,19 @@ Template: `config/claude/claude.json.example`
 
 ### MCP Servers
 
-Add MCP servers manually after install. Known servers:
+`config/shell/bin/claude-mcp-setup`（`~/.local/bin/claude-mcp-setup` にリンク）でまとめて登録できる。`~/.env` に `GITHUB_PERSONAL_ACCESS_TOKEN` を設定してから実行する。冪等（登録済みはスキップ）。
 
 ```bash
-# GitHub (requires GITHUB_PERSONAL_ACCESS_TOKEN env var)
-claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+claude-mcp-setup
+```
 
-# 登録済みサーバー一覧
+手動で追加する場合:
+```bash
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 claude mcp list
 ```
 
 Scopes: `--scope user`（全プロジェクト共通）、`--scope local`（現在プロジェクトのみ、デフォルト）
-
-## DeepAgents CLI Setup
-
-`config/deepagents/config.toml` は `~/.deepagents/config.toml` にシンボリックリンクされる。
-`~/.deepagents/.env`（APIキー）は git 管理外。テンプレートから作成する:
-
-```bash
-uv tool install deepagents-cli
-cp config/deepagents/.env.example ~/.deepagents/.env
-# ~/.deepagents/.env にAPIキーを設定
-```
-
-ローカルの llama.cpp API を使う場合は `llama-server` をポート 8080 で起動しておく。
-
-## Hermes Agent Setup
-
-`config/hermes/config.yaml` は `~/.hermes/config.yaml` にシンボリックリンクされる。
-`~/.hermes/.env`（APIキー）は git 管理外。テンプレートから作成する:
-
-```bash
-pip install hermes-agent  # または pipx install hermes-agent
-cp config/hermes/.env.example ~/.hermes/.env
-# ~/.hermes/.env にAPIキーを設定
-```
-
-モデルやターミナルバックエンドの変更:
-```bash
-hermes config set model anthropic/claude-sonnet-4-6
-hermes config set terminal.backend local
-```
-
-### Profiles
-
-プロファイルは独立 Git リポジトリで管理（dotfiles 非対象）。`hermes profile install github.com/toutatsu/toutatsu-agent` でインストール。
-
-## OpenClaw Setup
-
-`config/openclaw/openclaw.json.example` はテンプレート (シンボリックリンク非対象)。
-`~/.openclaw/openclaw.json` は `openclaw onboard` が自動生成・更新するため、直接管理しない。
-トークン (`gateway.auth.token`) が含まれるため git 管理対象外。
-
-新環境セットアップ手順:
-```bash
-npm install -g openclaw@latest
-openclaw onboard --install-daemon
-# 必要に応じてテンプレートを参考に ~/.openclaw/openclaw.json を調整
-```
-
-## ntfy-claude Setup
-
-`config/shell/bin/ntfy-claude` は ntfy サーバーへ通知を送るスクリプト。`install.sh` で `~/.local/bin/ntfy-claude` にリンクされる。
-接続先は git 管理外の `~/.config/ntfy-claude.env` で設定する（テンプレート: `config/shell/bin/ntfy-claude.env.example`）:
-
-```bash
-cp config/shell/bin/ntfy-claude.env.example ~/.config/ntfy-claude.env
-# NTFY_CLAUDE_URL と NTFY_CLAUDE_AUTH を編集
-```
-
-Claude Code フック（`Notification` / `PermissionRequest`）から自動呼び出しされる。
 
 ### Agents
 
@@ -198,13 +150,13 @@ Claude Code フック（`Notification` / `PermissionRequest`）から自動呼�
 
 ## ディレクトリリンクによるファイル混入について
 
-`dirs` エントリ（`config/codex/skills/` など）はディレクトリごとシンボリックリンクするため、**外部ツールがリンク先に書き込んだファイルがリポジトリ内に直接現れる**。
+`dir_links` エントリ（`config/codex/skills/` など）はディレクトリごとシンボリックリンクするため、**外部ツールがリンク先に書き込んだファイルがリポジトリ内に直接現れる**。
 
 確認済みの混入例:
 - `config/codex/skills/.system/` — Codex CLI が自動インストールするシステムスキル
 - `config/shell/bin/claude` — Claude Code インストーラーが `PATH` 内 `bin/` に書き込んだリンク
 
 対策:
-- 混入しうるパターンは `config/git/.gitignore` に追加済み
+- 混入しうるパターンはリポジトリ直下の `.gitignore` に追加済み
 - 新しいツールを追加した後は `git status` で意図しないファイルが混入していないか確認する
-- 根本的な解決策はディレクトリリンクをやめてファイルごとリンク（`file_spread_dirs` 方式）に移行することだが、新スキル追加のたびに `install.sh` 更新が必要になるためトレードオフがある
+- 根本的な解決策はディレクトリリンクをやめてファイルごとリンク（`spread_dirs` 方式）に移行することだが、新スキル追加のたびに `install.sh` 更新が必要になるためトレードオフがある

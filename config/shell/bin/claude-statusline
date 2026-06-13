@@ -1,0 +1,87 @@
+#!/bin/bash
+# Claude Code statusLine 用スクリプト
+# stdin の JSON からセッション情報を読み取り、端末幅に収まる範囲で 2 行のステータスを出力する
+
+input=$(cat)
+cols=$(tput cols 2>/dev/null || echo 80)
+
+jqr() { printf '%s' "$input" | jq -r "$1 // empty"; }
+
+model=$(jqr '.model.display_name')
+cwd=$(jqr '.workspace.current_dir')
+pr=$(jqr '.pr.number')
+pr_state=$(jqr '.pr.review_state')
+context=$(jqr '.context_window.remaining_percentage')
+cost=$(jqr '.cost.total_cost_usd')
+rate5=$(jqr '.rate_limits.five_hour.used_percentage')
+rate5_reset=$(jqr '.rate_limits.five_hour.resets_at')
+rate7=$(jqr '.rate_limits.seven_day.used_percentage')
+duration_ms=$(jqr '.cost.total_duration_ms')
+lines_added=$(jqr '.cost.total_lines_added')
+lines_removed=$(jqr '.cost.total_lines_removed')
+vim_mode=$(jqr '.vim.mode' | cut -c1)
+
+dirname=$(basename "$cwd" 2>/dev/null)
+branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
+git_changes=$(git -C "$cwd" status --porcelain 2>/dev/null | wc -l)
+unpushed=$(git -C "$cwd" log @{u}.. --oneline 2>/dev/null | wc -l)
+
+elapsed=""
+if [ -n "$duration_ms" ] && [ "$duration_ms" != "0" ]; then
+  secs=$((duration_ms / 1000))
+  if [ $secs -ge 3600 ]; then
+    elapsed=$(printf '%dh%02dm' $((secs / 3600)) $(((secs % 3600) / 60)))
+  elif [ $secs -ge 60 ]; then
+    elapsed=$(printf '%dm%02ds' $((secs / 60)) $((secs % 60)))
+  else
+    elapsed=$(printf '%ds' $secs)
+  fi
+fi
+
+reset_time=""
+[ -n "$rate5_reset" ] && reset_time=$(date -d "@$rate5_reset" '+%H:%M' 2>/dev/null)
+
+lines_info=""
+[ -n "$lines_added" ] && [ "$lines_added" != "0" ] && lines_info="+$lines_added"
+[ -n "$lines_removed" ] && [ "$lines_removed" != "0" ] && lines_info="$lines_info/-$lines_removed"
+
+# 1 行目: ディレクトリ・ブランチ・PR・変更数・未プッシュ数
+line1=""
+[ -n "$dirname" ] && line1="📁 $dirname"
+[ -n "$branch" ] && line1="$line1  ⎇ $branch"
+[ -n "$pr" ] && line1="$line1  PR #$pr${pr_state:+ ($pr_state)}"
+[ "$git_changes" -gt 0 ] 2>/dev/null && line1="$line1  📝 $git_changes"
+[ "$unpushed" -gt 0 ] 2>/dev/null && line1="$line1  ⬆ $unpushed"
+
+# 2 行目: モデル・コンテキスト残量を基本に、端末幅が許す範囲でセグメントを追加
+line2=""
+[ -n "$vim_mode" ] && line2="[$vim_mode]"
+[ -n "$model" ] && line2="$line2 $model"
+[ -n "$context" ] && line2="$line2 | 📈 Ctx:$(printf '%.0f' "$context")%"
+base_len=$(echo "$line2" | wc -m)
+
+rate5_seg=""
+[ -n "$rate5" ] && rate5_seg=" | ⏱ 5h:$(printf '%.0f' "$rate5")%${reset_time:+ ↩$reset_time}"
+rate7_seg=""
+[ -n "$rate7" ] && rate7_seg=" | 📅 7d:$(printf '%.0f' "$rate7")%"
+cost_seg=""
+[ -n "$cost" ] && cost_seg=" | 💰 \$$(printf '%.2f' "$cost")"
+elapsed_seg=""
+[ -n "$elapsed" ] && elapsed_seg=" | 🕐 $elapsed"
+lines_seg=""
+[ -n "$lines_info" ] && lines_seg=" | ✏️ $lines_info"
+
+full_len=$((base_len + ${#rate5_seg} + ${#rate7_seg} + ${#cost_seg} + ${#elapsed_seg} + ${#lines_seg}))
+if [ $full_len -le $cols ]; then
+  line2="$line2$rate5_seg$rate7_seg$cost_seg$elapsed_seg$lines_seg"
+elif [ $((base_len + ${#rate5_seg} + ${#rate7_seg} + ${#cost_seg} + ${#elapsed_seg})) -le $cols ]; then
+  line2="$line2$rate5_seg$rate7_seg$cost_seg$elapsed_seg"
+elif [ $((base_len + ${#rate5_seg} + ${#rate7_seg} + ${#cost_seg})) -le $cols ]; then
+  line2="$line2$rate5_seg$rate7_seg$cost_seg"
+elif [ $((base_len + ${#rate5_seg} + ${#rate7_seg})) -le $cols ]; then
+  line2="$line2$rate5_seg$rate7_seg"
+elif [ $((base_len + ${#rate5_seg})) -le $cols ]; then
+  line2="$line2$rate5_seg"
+fi
+
+printf '%s\n%s' "$line1" "$line2"

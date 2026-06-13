@@ -2,11 +2,17 @@
 # ntfy サーバーへ Claude Code の通知を送信する
 set -euo pipefail
 
-# ~/.config/ntfy-claude.env があれば読み込む（テンプレート: config/shell/bin/ntfy-claude.env.example）
-[ -f "$HOME/.config/ntfy-claude.env" ] && . "$HOME/.config/ntfy-claude.env"
+# 接続先は ~/.config/ntfy-claude.env で設定する（テンプレート: ntfy-claude.env.example）
+NTFY_CLAUDE_URL=""
+NTFY_CLAUDE_AUTH=""
+if [ -f "$HOME/.config/ntfy-claude.env" ]; then
+  . "$HOME/.config/ntfy-claude.env"
+fi
 
-NTFY_URL="${NTFY_CLAUDE_URL:-https://ntfy.toutatsu.internal/claude}"
-NTFY_AUTH="${NTFY_CLAUDE_AUTH:-claude:claude}"
+if [ -z "$NTFY_CLAUDE_URL" ]; then
+  echo "ntfy-claude: NTFY_CLAUDE_URL が設定されていません。~/.config/ntfy-claude.env を作成してください。" >&2
+  exit 1
+fi
 
 title="${1:-Claude Code}"
 message="${2:-通知}"
@@ -16,7 +22,7 @@ click="${5:-}"
 actions="${6:-}"
 
 headers=(
-  -u "$NTFY_AUTH"
+  -u "$NTFY_CLAUDE_AUTH"
   -H "Title: $title"
   -H "Priority: $priority"
   -H "Tags: $tags"
@@ -25,4 +31,4 @@ headers=(
 [ -n "$click" ] && headers+=(-H "Click: $click")
 [ -n "$actions" ] && headers+=(-H "Actions: $actions")
 
-curl -sk "${headers[@]}" -d "$message" "$NTFY_URL" > /dev/null
+curl -sk --max-time 5 "${headers[@]}" -d "$message" "$NTFY_CLAUDE_URL" > /dev/null

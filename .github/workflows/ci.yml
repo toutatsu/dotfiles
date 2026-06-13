@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint install.sh
+        run: shellcheck install.sh
+
+      - name: Lint bash scripts in config/shell/bin/
+        run: |
+          for f in config/shell/bin/*; do
+            [ -f "$f" ] || continue
+            head -1 "$f" | grep -q "bash" || continue
+            shellcheck "$f"
+          done
+
+  smoke-test:
+    name: Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install
+        run: |
+          export HOME=$(mktemp -d)
+          out=$(./install.sh)
+          echo "$out"
+          if echo "$out" | grep -qE '失敗: [^0]'; then
+            echo "install failed" >&2
+            exit 1
+          fi
+
+      - name: Idempotency (2nd install)
+        run: |
+          export HOME=$(mktemp -d)
+          ./install.sh
+          out=$(./install.sh)
+          echo "$out"
+          if echo "$out" | grep -qE '失敗: [^0]'; then
+            echo "2nd install failed" >&2
+            exit 1
+          fi
+
+      - name: Uninstall leaves no symlinks
+        run: |
+          export HOME=$(mktemp -d)
+          ./install.sh
+          ./install.sh --uninstall
+          count=$(find "$HOME" -type l | wc -l)
+          if [ "$count" -ne 0 ]; then
+            echo "残存シンボリックリンク: $count 個" >&2
+            find "$HOME" -type l >&2
+            exit 1
+          fi
+
+  jq-scripts:
+    name: jq Script Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Test claude-statusline
+        run: |
+          echo '{"model":{"display_name":"claude-sonnet-4-6"},"workspace":{"current_dir":"/tmp"},"context_window":{"remaining_percentage":80},"cost":{"total_cost_usd":0.01,"total_duration_ms":5000,"total_lines_added":10,"total_lines_removed":2},"rate_limits":{"five_hour":{"used_percentage":20},"seven_day":{"used_percentage":5}}}' \
+            | bash config/shell/bin/claude-statusline
+
+      - name: Test ntfy-claude-hook (PermissionRequest)
+        run: |
+          # ntfy-claude を差し替えるため、スクリプト内の参照パスを上書き
+          cat > /tmp/fake-ntfy <<'EOF'
+          #!/bin/bash
+          exit 0
+          EOF
+          chmod +x /tmp/fake-ntfy
+          sed 's|"$(dirname "$0")/ntfy-claude"|/tmp/fake-ntfy|' \
+            config/shell/bin/ntfy-claude-hook > /tmp/ntfy-claude-hook-test
+          echo '{"hook_event_name":"PermissionRequest","tool_name":"Bash","tool_input":{"command":"ls -la"}}' \
+            | bash /tmp/ntfy-claude-hook-test
+
+      - name: Test ntfy-claude-hook (Stop)
+        run: |
+          echo '{"hook_event_name":"Stop","last_assistant_message":"タスクが完了しました"}' \
+            | bash /tmp/ntfy-claude-hook-test

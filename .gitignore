@@ -1,0 +1,10 @@
+# 外部ツールがディレクトリリンク先へ書き込むファイルの混入対策（CLAUDE.md 参照）
+
+# Codex CLI が自動管理するシステムスキル
+config/codex/skills/.system/
+
+# Claude Code バイナリへのシンボリックリンク（バージョン固有）
+config/shell/bin/claude
+
+# Claude Code ローカル設定
+.claude/settings.local.json

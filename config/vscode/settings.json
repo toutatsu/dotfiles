@@ -52,6 +52,8 @@
     "terminal.integrated.defaultProfile.linux": "zsh",
     // ターミナルのスクロールバック行数
     "terminal.integrated.scrollback": 5000,
+    // GPU レンダラの再描画バグ（特定セルが黒四角になる）回避のため DOM 描画に切替
+    "terminal.integrated.gpuAcceleration": "off",
 
     // ===== Git =====
     "git.autofetch": true,

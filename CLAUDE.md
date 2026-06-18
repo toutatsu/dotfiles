@@ -54,7 +54,7 @@ config/
   tmux/   → .tmux.conf
   vim/    → .vimrc
   vscode/
-    settings.json          → ~/.config/Code/User/settings.json
+    settings.json          → ~/.config/Code/User/settings.json（ローカル起動）/ ~/.vscode-server/data/Machine/settings.json（Remote/Tunnel接続される側）
   editorconfig/
     .editorconfig          → ~/.editorconfig
   opencode/

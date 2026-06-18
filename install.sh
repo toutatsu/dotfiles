@@ -50,6 +50,8 @@ file_links=(
   "config/claude/CLAUDE.md:$HOME/.claude/CLAUDE.md"
   "config/claude/settings.json:$HOME/.claude/settings.json"
   "config/vscode/settings.json:$HOME/.config/Code/User/settings.json"
+  # Remote/Tunnel 接続される側で有効になる Machine スコープ設定（WSL・SSH Remote・code tunnel 等。親ディレクトリが無い環境では自動スキップ）
+  "config/vscode/settings.json:$HOME/.vscode-server/data/Machine/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
   "config/opencode/tui.json:$HOME/.config/opencode/tui.json"

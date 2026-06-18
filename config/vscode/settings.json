@@ -115,6 +115,10 @@
     // Python
     "python.analysis.typeCheckingMode": "standard",
 
+    // ===== Vim =====
+    // .vimrc を VSCodeVim に読み込ませる
+    "vim.vimrc.enable": true,
+
     // ===== Claude Code =====
     "claudeCode.preferredLocation": "panel",
     "chat.disableAIFeatures": true,

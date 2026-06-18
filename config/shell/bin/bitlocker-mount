@@ -52,6 +52,30 @@ do_mount() {
     echo "完了: $mountpoint にアクセスできます"
 }
 
+try_umount() {
+    local target="$1"
+    local err
+    if err=$(sudo umount "$target" 2>&1); then
+        return 0
+    fi
+    echo "警告: '$target' をアンマウントできませんでした" >&2
+    echo "  原因: $err" >&2
+    # busy の場合は使用中プロセスを表示する
+    # lsof +D は配下を再帰走査して FUSE マウント等でハングするため使わない。
+    # fuser -m はマウントポイント単位で即座に特定でき、暴走防止に timeout を付ける。
+    if [[ "$err" == *busy* ]]; then
+        echo "  使用中のプロセス:" >&2
+        if command -v fuser >/dev/null 2>&1; then
+            sudo timeout 10 fuser -vm "$target" 2>&1 | sed 's/^/    /' >&2 || true
+        elif command -v lsof >/dev/null 2>&1; then
+            sudo timeout 10 lsof "$target" 2>/dev/null | sed 's/^/    /' >&2 || true
+        else
+            echo "    （fuser / lsof が無いため特定できません）" >&2
+        fi
+    fi
+    return 1
+}
+
 do_umount() {
     local mountpoint="$1"
     local dislocker_dir="${mountpoint}-tmp"
@@ -68,16 +92,22 @@ do_umount() {
 
     echo "アンマウント中: $mountpoint"
     if mountpoint -q "$mountpoint" 2>/dev/null || findmnt -n "$mountpoint" >/dev/null 2>&1; then
-        sudo umount "$mountpoint" 2>/dev/null || { echo "警告: '$mountpoint' をアンマウントできませんでした"; all_unmounted=false; }
+        try_umount "$mountpoint" || all_unmounted=false
     else
         echo "（すでにアンマウント済み）"
     fi
 
     echo "アンマウント中: $dislocker_dir"
     if findmnt -n "$dislocker_dir" >/dev/null 2>&1; then
-        sudo umount "$dislocker_dir" 2>/dev/null || { echo "警告: '$dislocker_dir' をアンマウントできませんでした"; all_unmounted=false; }
+        try_umount "$dislocker_dir" || all_unmounted=false
     else
         echo "（すでにアンマウント済み）"
+    fi
+
+    # アンマウントできなかった場合は dislocker_dir を消すとマウントが壊れるため残す
+    if [[ "$all_unmounted" != true ]]; then
+        echo "完了: アンマウントできなかったマウントポイントがあります（上記の原因を参照）" >&2
+        return 1
     fi
 
     if [[ -d "$dislocker_dir" ]]; then
@@ -87,7 +117,7 @@ do_umount() {
     echo "完了"
 
     # マウントが残っていなければ（=all_unmounted）、電源オフ（安全な取り外し）を選択可能にする
-    if [[ "$all_unmounted" == true && -n "$device" && -b "$device" ]]; then
+    if [[ -n "$device" && -b "$device" ]]; then
         read -r -p "デバイス $device の電源を切って安全に取り外しますか？ [y/N]: " answer
         if [[ "$answer" =~ ^[Yy]$ ]]; then
             sudo udisksctl power-off -b "$device" && echo "電源オフ: $device（再使用には挿し直してください）"

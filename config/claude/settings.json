@@ -135,7 +135,5 @@
   "todoFeatureEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "defaultView": "chat",
-  "model": "claude-fable-5",
-  "fallbackModel": ["opus", "sonnet"]
+  "defaultView": "chat"
 }

@@ -121,6 +121,6 @@
 
     // ===== Claude Code =====
     "claudeCode.preferredLocation": "panel",
-    "chat.disableAIFeatures": true,
+    "chat.disableAIFeatures": false,
     "terminal.integrated.mouseWheelScrollSensitivity": 3
 }

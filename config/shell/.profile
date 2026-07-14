@@ -55,6 +55,11 @@ fi
 
 
 
+# rm をゴミ箱移動に置き換え (trash-cli)。実削除したい場合は \rm または /bin/rm を使う
+if command -v trash-put >/dev/null 2>&1; then
+  alias rm='trash-put'
+fi
+
 # source all shell function files
 for __f in "$HOME/.local/share/dotfiles/functions/"*.sh; do
   [ -f "$__f" ] && . "$__f"

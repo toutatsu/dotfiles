@@ -6,8 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal dotfiles managed via symlinks. The repo contains shell configs, editor settings, and terminal tool configs deployed to `$HOME` via `install.sh`.
 
-残タスク（機能追加系）の仕様書は `docs/improvement-plan.md` を参照。着手前に必ず読むこと。
-
 ツール固有のセットアップ手順（DeepAgents / Hermes / OpenClaw / ntfy-claude）は `.claude/rules/` 配下に分割されており、該当パスのファイル編集時に自動ロードされる。
 
 ## Deployment
@@ -25,6 +23,10 @@ Or directly:
 ```
 
 `install.sh` uses its own directory as the source (safe to run from anywhere).
+
+install.sh を変更する際の注意:
+- `set -e` を入れない（`(( x++ )) || true` のカウンタ方式と衝突する）
+- 動作検証は必ず仮 HOME（`HOME=$(mktemp -d)`）で行い、実環境の `$HOME` を汚さない
 
 All files are under `config/`. `mytheme.zsh-theme` is deployed to `~/.oh-my-zsh/themes/` (skipped if oh-my-zsh is not installed).
 

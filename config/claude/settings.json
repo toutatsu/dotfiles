@@ -7,7 +7,6 @@
   },
   "includeGitInstructions": true,
   "permissions": {
-    "defaultMode": "acceptEdits",
     "allow": [
       "Bash(git *)",
       "Bash(make *)",
@@ -38,9 +37,10 @@
       "Read(**/.env.production)",
       "Bash(git push --force*)",
       "Bash(git push -f*)"
-    ]
+    ],
+    "defaultMode": "acceptEdits"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus",
   "fallbackModel": [
     "opus",
     "sonnet"
@@ -114,7 +114,16 @@
     "claude-code-setup@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "chrome-devtools-mcp@claude-plugins-official": true
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "financial-analysis@claude-for-financial-services": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-for-financial-services": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/financial-services"
+      }
+    }
   },
   "language": "japanese",
   "alwaysThinkingEnabled": false,

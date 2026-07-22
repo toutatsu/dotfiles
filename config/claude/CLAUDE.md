@@ -10,7 +10,11 @@
 - Never nest subagents (subagents cannot spawn further subagents).
 
 ### Context Management
-- Claude cannot run `/compact` itself (auto-compact handles the limit). At natural breakpoints (after a task completes, before starting a new one), suggest the user run `/compact` if significant context is no longer needed.
+- Claude cannot run `/compact` or `/clear` itself. At natural breakpoints, suggest whichever fits:
+  - `/clear` — switching to unrelated work (stale context is pure waste). Suggest `/rename` first so the session can be found with `/resume`.
+  - `/compact` — same task continues but history is bloated.
+- Auto-compact is the overflow safety net, not the primary strategy. Manual compaction at a chosen breakpoint preserves better context.
+- Delegate verbose operations (test runs, log processing, doc fetching) to subagents so only the summary enters the main context.
 - Prefer the Explore subagent (uses Haiku — cheaper) over general-purpose agents for codebase exploration.
 
 ### CLAUDE.md Files
@@ -20,3 +24,7 @@
 ## Response Style
 - Keep responses concise. No trailing summaries of what was just done.
 - No multi-paragraph docstrings or explanatory comment blocks in code.
+
+## Compact Instructions
+
+When compacting, prioritize: the user's original goal and constraints, decisions made and their rationale, file paths and code changes already applied, and unresolved issues. Drop verbose tool output and superseded exploration.

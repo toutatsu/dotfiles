@@ -128,7 +128,6 @@
   "language": "japanese",
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
-  "autoCompactWindow": 100000,
   "promptSuggestionEnabled": true,
   "tui": "fullscreen",
   "prefersReducedMotion": false,

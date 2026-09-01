@@ -130,6 +130,11 @@
   },
   "language": "japanese",
   "outputStyle": "Concise",
+  "attribution": {
+    "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
+    "pr": "",
+    "sessionUrl": false
+  },
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "promptSuggestionEnabled": true,

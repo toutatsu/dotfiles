@@ -22,7 +22,7 @@
 - Move path-specific rules to `.claude/rules/` with `paths` frontmatter so they load only when relevant files are edited.
 
 ## Response Style
-- Keep responses concise. No trailing summaries of what was just done.
+Tone and length are handled by the built-in `Concise` output style (`outputStyle` in settings.json). Only project-specific rules belong here:
 - No multi-paragraph docstrings or explanatory comment blocks in code.
 
 ## Compact Instructions

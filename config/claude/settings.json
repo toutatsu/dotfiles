@@ -129,6 +129,7 @@
     }
   },
   "language": "japanese",
+  "outputStyle": "Concise",
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",
   "promptSuggestionEnabled": true,

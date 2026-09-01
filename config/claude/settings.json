@@ -41,7 +41,10 @@
     "defaultMode": "acceptEdits"
   },
   "sandbox": {
-    "enabled": true
+    "enabled": true,
+    "network": {
+      "allowUnixSockets": ["/home/toutatsu/.ssh/agent.sock"]
+    }
   },
   "model": "opus",
   "fallbackModel": [

@@ -7,7 +7,7 @@
 - Spawn subagents only when tasks are genuinely independent and can run in parallel to save wall-clock time.
 - Prefer direct tool calls (Read, Grep, Bash) over spawning an Explore or general-purpose agent for targeted lookups.
 - When spawning subagents, instruct them to return concise summaries only — not raw tool output.
-- Never nest subagents (subagents cannot spawn further subagents).
+- Avoid nesting subagents unless the task genuinely splits into parallel subtasks. Nesting is capped at 3 levels below the main conversation (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH` to change).
 
 ### Context Management
 - Claude cannot run `/compact` or `/clear` itself. At natural breakpoints, suggest whichever fits:

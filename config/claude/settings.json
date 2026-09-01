@@ -40,6 +40,9 @@
     ],
     "defaultMode": "acceptEdits"
   },
+  "sandbox": {
+    "enabled": true
+  },
   "model": "opus",
   "fallbackModel": [
     "opus",

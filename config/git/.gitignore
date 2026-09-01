@@ -5,3 +5,5 @@
 .env
 **/.env
 **/.claude/settings.local.json
+
+**/.claude/.cc-writes/

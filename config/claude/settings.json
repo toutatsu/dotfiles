@@ -38,12 +38,14 @@
       "Bash(git push --force*)",
       "Bash(git push -f*)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
   "sandbox": {
     "enabled": true,
     "network": {
-      "allowUnixSockets": ["/home/toutatsu/.ssh/agent.sock"]
+      "allowUnixSockets": [
+        "/home/toutatsu/.ssh/agent.sock"
+      ]
     }
   },
   "model": "opus",

@@ -7,7 +7,6 @@
     "pr": "",
     "sessionUrl": false
   },
-  "includeGitInstructions": true,
   "permissions": {
     "allow": [
       "Bash(mkdir *)",
@@ -56,7 +55,6 @@
   },
   "model": "opus",
   "fallbackModel": [
-    "opus",
     "sonnet"
   ],
   "skillOverrides": {
@@ -152,7 +150,6 @@
       "gh *"
     ]
   },
-  "alwaysThinkingEnabled": false,
   "promptSuggestionEnabled": true,
   "tui": "fullscreen",
   "prefersReducedMotion": false,

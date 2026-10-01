@@ -5,6 +5,11 @@
   "env": {
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-haiku-4-5-20251001"
   },
+  "attribution": {
+    "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
+    "pr": "",
+    "sessionUrl": false
+  },
   "includeGitInstructions": true,
   "permissions": {
     "allow": [
@@ -39,14 +44,6 @@
       "Bash(git push -f*)"
     ],
     "defaultMode": "auto"
-  },
-  "sandbox": {
-    "enabled": true,
-    "network": {
-      "allowUnixSockets": [
-        "/home/toutatsu/.ssh/agent.sock"
-      ]
-    }
   },
   "model": "opus",
   "fallbackModel": [
@@ -133,12 +130,10 @@
       }
     }
   },
-  "language": "japanese",
   "outputStyle": "Concise",
-  "attribution": {
-    "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
-    "pr": "",
-    "sessionUrl": false
+  "language": "japanese",
+  "sandbox": {
+    "enabled": false
   },
   "alwaysThinkingEnabled": false,
   "effortLevel": "medium",

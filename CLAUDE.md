@@ -119,7 +119,8 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 
 `config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (response style, CLAUDE.md management, compact instructions).
 `config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
-Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
+Key settings: `language: japanese`, `permissions.defaultMode: auto`（allow は classifier を素通りさせるため読み取り系に限定し、push・PR 作成などは `ask`、force push と秘密情報の読み取りは `deny`）。
+`.claude/settings.json`（プロジェクト設定）で `config/claude/settings.json` と `config/claude/CLAUDE.md` の編集を `ask` にしている（symlink 元は `~/.claude/` の保護パス扱いにならないため）。
 ステータスラインは `config/shell/bin/claude-statusline`（`~/.local/bin` にリンク）を `statusLine.command` から呼び出す。
 
 MCP server configs and credentials live in `~/.claude.json` (not version-controlled).

@@ -117,7 +117,7 @@ oh-my-zsh is not included in this repo and must be installed separately before s
 
 ## Claude Code Setup
 
-`config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (token efficiency, subagent usage, response style).
+`config/claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md` — global instructions applied to all projects (response style, CLAUDE.md management, compact instructions).
 `config/claude/settings.json` is managed here and symlinked to `~/.claude/settings.json`.
 Key settings: `language: japanese`, allowed tools: `Bash(git *)`, `Bash(make *)`.
 ステータスラインは `config/shell/bin/claude-statusline`（`~/.local/bin` にリンク）を `statusLine.command` から呼び出す。

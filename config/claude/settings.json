@@ -51,7 +51,8 @@
       "Bash(git push * -f *)",
       "Bash(gh repo delete *)"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "blockReadsOutsideWorkingDirectories": true
   },
   "model": "opus",
   "fallbackModel": [
@@ -141,7 +142,15 @@
   "outputStyle": "Concise",
   "language": "japanese",
   "sandbox": {
-    "enabled": false
+    "enabled": true,
+    "excludedCommands": [
+      "git push *",
+      "git fetch *",
+      "git pull *",
+      "git ls-remote *",
+      "git status *",
+      "gh *"
+    ]
   },
   "alwaysThinkingEnabled": false,
   "promptSuggestionEnabled": true,

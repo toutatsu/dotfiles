@@ -6,5 +6,8 @@ config/codex/skills/.system/
 # Claude Code バイナリへのシンボリックリンク（バージョン固有）
 config/shell/bin/claude
 
+# claude.ai から同期される skills（Claude Code が自動管理）
+config/claude/skills/synced/
+
 # Claude Code ローカル設定
 .claude/settings.local.json

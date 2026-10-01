@@ -159,6 +159,7 @@ Scopes: `--scope user`（全プロジェクト共通）、`--scope local`（現�
 確認済みの混入例:
 - `config/codex/skills/.system/` — Codex CLI が自動インストールするシステムスキル
 - `config/shell/bin/claude` — Claude Code インストーラーが `PATH` 内 `bin/` に書き込んだリンク
+- `config/claude/skills/synced/` — claude.ai から同期される skills
 
 対策:
 - 混入しうるパターンはリポジトリ直下の `.gitignore` に追加済み

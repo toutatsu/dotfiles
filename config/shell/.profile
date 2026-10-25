@@ -6,6 +6,13 @@ export EDITOR=vim
 # User-local binaries (e.g. Claude Code, pip-installed tools)
 export PATH="$HOME/.local/bin:$PATH"
 
+# nvm の Node を非対話環境（GUI アプリ、Claude Code が起動する MCP 等）にも通す。nvm.sh は重いので読み込まない
+if [ -d "$HOME/.nvm/versions/node" ]; then
+  _nvm_bin="$(ls -d "$HOME/.nvm/versions/node/"*/bin 2>/dev/null | sort -V | tail -n 1)"
+  [ -n "$_nvm_bin" ] && export PATH="$_nvm_bin:$PATH"
+  unset _nvm_bin
+fi
+
 # 共通環境変数（テンプレート: dotfiles/.env.example）
 if [ -f "$HOME/.env" ]; then
   set -a

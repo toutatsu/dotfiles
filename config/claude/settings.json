@@ -3,7 +3,7 @@
   "cleanupPeriodDays": 30,
   "skillListingMaxDescChars": 512,
   "env": {
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-haiku-4-5-20251001"
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
   },
   "attribution": {
     "commit": "Co-Authored-By: Claude <noreply@anthropic.com>",
@@ -23,7 +23,7 @@
       "Bash(gh *)",
       "Bash(mkdir *)",
       "Bash(shellcheck *)",
-      "Edit(~/Desktop/git-repositories/**)",
+      "Edit(~/Desktop/git-repos/**)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebSearch"
     ],

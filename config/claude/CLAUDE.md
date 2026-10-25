@@ -15,7 +15,7 @@
   - `/compact` — same task continues but history is bloated.
 - Auto-compact is the overflow safety net, not the primary strategy. Manual compaction at a chosen breakpoint preserves better context.
 - Delegate verbose operations (test runs, log processing, doc fetching) to subagents so only the summary enters the main context.
-- Prefer the Explore subagent (uses Haiku — cheaper) over general-purpose agents for codebase exploration.
+- Prefer the Explore subagent (read-only, keeps file dumps out of the main context) over general-purpose agents for codebase exploration. It runs on the main model (not Haiku); `CLAUDE_CODE_SUBAGENT_MODEL` only applies to agents without a `model:` frontmatter.
 
 ### CLAUDE.md Files
 - Keep CLAUDE.md files under 200 lines. Beyond that, compliance drops and token cost rises.

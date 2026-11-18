@@ -53,7 +53,6 @@ file_links=(
   # Remote/Tunnel 接続される側で有効になる Machine スコープ設定（WSL・SSH Remote・code tunnel 等。親ディレクトリが無い環境では自動スキップ）
   "config/vscode/settings.json:$HOME/.vscode-server/data/Machine/settings.json"
   "config/editorconfig/.editorconfig:$HOME/.editorconfig"
-  "config/fcitx5/90-fcitx5.conf:$HOME/.config/environment.d/90-fcitx5.conf"
   "config/opencode/opencode.jsonc:$HOME/.config/opencode/opencode.jsonc"
   "config/opencode/tui.json:$HOME/.config/opencode/tui.json"
   "config/opencode/AGENTS.md:$HOME/.config/opencode/AGENTS.md"
@@ -319,10 +318,6 @@ if [ "$mode" = "install" ] && [ "$dry_run" = false ]; then
   mkdir -p "$HOME/.ssh/control"
   mkdir -p "$HOME/.local/bin"
   mkdir -p "$HOME/.local/share/dotfiles/functions"
-  # fcitx5 未導入の環境では作らず、IME 環境変数の配置をスキップさせる
-  if command -v fcitx5 >/dev/null 2>&1; then
-    mkdir -p "$HOME/.config/environment.d"
-  fi
   chmod 700 "$HOME/.ssh" "$HOME/.ssh/control"
 fi
 

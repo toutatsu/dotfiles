@@ -57,9 +57,6 @@
   "fallbackModel": [
     "sonnet"
   ],
-  "skillOverrides": {
-    "commit-commands:commit": "off"
-  },
   "hooks": {
     "PostToolUse": [
       {

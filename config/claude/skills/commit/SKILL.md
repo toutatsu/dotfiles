@@ -30,6 +30,5 @@ Stage and commit the current changes following these steps:
 - `.env` などの機密ファイルをステージしない
 - `--no-verify` を使わない
 - コミットメッセージは英語で書く（description のみ）
-- `Co-Authored-By: Claude <noreply@anthropic.com>` を末尾に追加する
 
 $ARGUMENTS

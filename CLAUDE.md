@@ -59,6 +59,8 @@ config/
     settings.json          → ~/.config/Code/User/settings.json（ローカル起動）/ ~/.vscode-server/data/Machine/settings.json（Remote/Tunnel接続される側）
   editorconfig/
     .editorconfig          → ~/.editorconfig
+  fcitx5/
+    90-fcitx5.conf         → ~/.config/environment.d/90-fcitx5.conf（IME 環境変数。fcitx5 未導入の環境ではスキップ）
   opencode/
     opencode.jsonc         → ~/.config/opencode/opencode.jsonc
     .env.example           — opencode 用 API キー設定テンプレート (シンボリックリンク非対象)
